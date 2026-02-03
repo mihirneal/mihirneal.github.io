@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research – Mihir Tripathy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Blocking: set theme before first paint to prevent flash -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('theme') ||
+              (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a href="index.html">Home</a>
+  <a href="research.html" class="active">Research</a>
+  <a href="https://supercluster.com/" target="_blank" rel="noopener">Writing</a>
+  <button id="theme-toggle" aria-label="Toggle light / dark mode">☾</button>
+</nav>
+
+<!-- Research content -->
+<div class="research-page">
+  <div class="research-hero">
+    <h1>Research</h1>
+  </div>
+
+  <div class="pub-list">
+
+    <!-- 2025 -->
+    <div class="pub-entry">
+      <span class="pub-year">2025</span>
+      <div class="pub-body">
+        <div class="paper-card-header">
+          <span class="venue-badge algonauts">Algonauts 2025 – 4th Place</span>
+        </div>
+        <h3>Predicting Brain Responses To Natural Movies With Multimodal LLMs</h3>
+        <p class="authors">Cesar Kadir Torrico Villanueva, Jiaxin Cindy Tu, <strong>Mihir Tripathy</strong>, Connor Lane, Rishab Iyer, Paul S. Scotti</p>
+        <p class="description">Combined multimodal LLM features (video, speech, text, vision) to predict brain fMRI responses to natural movies.</p>
+        <div class="paper-links">
+          <a href="https://arxiv.org/abs/2507.19956" target="_blank" rel="noopener">arXiv</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2024 -->
+    <div class="pub-entry">
+      <span class="pub-year">2024</span>
+      <div class="pub-body">
+        <div class="paper-card-header">
+          <span class="venue-badge icml">ICML 2024</span>
+        </div>
+        <h3>MindEye2: Shared-Subject Models Enable fMRI-To-Image With 1 Hour of Data</h3>
+        <p class="authors">Paul S. Scotti, <strong>Mihir Tripathy</strong>, Cesar Kadir Torrico Villanueva, Reese Kneeland, Tong Chen, Ashutosh Narang, Charan Santhirasegaran, Jonathan Xu, Thomas Naselaris, Kenneth A. Norman, Tanishq Mathew Abraham</p>
+        <p class="description">Shared-subject model architecture enabling fMRI-to-image reconstruction from just one hour of scanning data per subject.</p>
+        <div class="paper-links">
+          <a href="https://arxiv.org/abs/2403.11207" target="_blank" rel="noopener">arXiv</a>
+          <a href="https://medarc-ai.github.io/mindeye2/" target="_blank" rel="noopener">Project Page</a>
+          <a href="https://github.com/MedARC-AI/MindEyeV2" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div class="pub-image">
+          <img src="mindeye.png" alt="MindEye2 architecture diagram">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Theme toggle listener -->
+<script>
+  (function(){
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    function sync(){ btn.textContent = root.getAttribute('data-theme')==='dark' ? '☀' : '☾'; }
+    sync();
+    btn.addEventListener('click', function(){
+      var next = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      sync();
+    });
+  })();
+</script>
+</body>
+</html>
