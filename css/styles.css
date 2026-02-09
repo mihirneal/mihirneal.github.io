@@ -1086,7 +1086,12 @@ nav a.active::after {
   }
 
   .home-content {
-    padding: 60px 18px 20px;  /* nav height + breathing room */
+    padding: 74px 18px 12px;  /* push content lower on mobile */
+  }
+
+  .home-main {
+    justify-content: flex-end;
+    padding-bottom: 14px;
   }
 
   .home-content h1 {
