@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Misc – Mihir Tripathy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20260209-22">
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a href="index.html">Home</a>
+  <a href="research.html">Research</a>
+  <a href="code.html">Code</a>
+  <a href="writing.html">Writing</a>
+  <a href="misc.html" class="active">Misc</a>
+</nav>
+
+<!-- Misc content -->
+<div class="simple-page">
+  <div class="simple-hero">
+    <h1>Miscellaneous</h1>
+  </div>
+
+  <div class="simple-list">
+    <div class="simple-item misc-notes">
+      <ul class="misc-bullets">
+        <li>I used to write about space for Supercluster.com. I may not be the best writer, but I enjoyed following SpaceX, which drew me back to my interest in space after the Shuttle retired.</li>
+        <li>I'm physically active. I enjoy playing tennis competitively (NTRP 4.5) and lifting weights at the gym. I also love running on trails and hiking. I've been told I'm a good cook (italian, indian, instant-ramen?), if I have enough time.</li>
+        <li>Asimov's Foundation and Robots had the greatest impact on my life, which is why I work on AI and want to extend that to robots. Waymos and robotaxis should have self-defense rights!</li>
+      </ul>
+
+      <h2 class="misc-section-title">Books</h2>
+      <p class="misc-books-intro">I'm a pretty avid reader. Here's a list of books that moved me in some significant way:</p>
+      <h3 class="misc-subsection-title">Non-fiction</h3>
+      <ul class="misc-bullets misc-books-list">
+        <li>Elon Musk (Ashlee Vance)</li>
+        <li>Life 3.0 (Max Tegmark)</li>
+        <li>Elon Musk (Walter Isaacson)</li>
+        <li>Liftoff: Elon Musk and the Desperate Early Days That Launched SpaceX (Eric Berger)</li>
+        <li>Reentry: SpaceX, Elon Musk, and the Reusable Rockets (Eric Berger)</li>
+        <li>The Technological Republic: Hard Power, Soft Belief, and the Future of the West (Alex Karp)</li>
+        <li>Chip War: The Fight for the World's Most Critical Technology (Chris Miller)</li>
+        <li>The Nvidia Way (Tae Kim)</li>
+        <li>Focus: The ASML Way (Marc Hijink)</li>
+        <li>Steve Jobs (Walter Isaacson)</li>
+        <li>The Case for Mars (Robert Zubrin)</li>
+        <li>A New World on Mars (Robert Zubrin)</li>
+        <li>The Case for Space (Robert Zubrin)</li>
+        <li>Empire of AI (Karen Hao)</li>
+      </ul>
+
+      <h3 class="misc-subsection-title">Fiction</h3>
+      <ul class="misc-bullets misc-books-list">
+        <li>The Martian (Andy Weir)</li>
+        <li>Artemis (Andy Weir)</li>
+        <li>Project Hail Mary (Andy Weir)</li>
+        <li>Foundation (Isaac Asimov)</li>
+        <li>Foundation and Empire (Isaac Asimov)</li>
+        <li>Second Foundation (Isaac Asimov)</li>
+        <li>Foundation's Edge (Isaac Asimov)</li>
+        <li>Foundation and Earth (Isaac Asimov)</li>
+        <li>I, Robot (Isaac Asimov)</li>
+        <li>The Caves of Steel (Isaac Asimov)</li>
+        <li>The Naked Sun (Isaac Asimov)</li>
+        <li>The Robots of Dawn (Isaac Asimov)</li>
+        <li>Robots and Empire (Isaac Asimov)</li>
+        <li>Prelude to Foundation (Isaac Asimov)</li>
+        <li>Forward the Foundation (Isaac Asimov)</li>
+        <li>Red Rising (Pierce Brown)</li>
+        <li>Golden Sun (Pierce Brown)</li>
+        <li>Morning Star (Pierce Brown)</li>
+        <li>2001: A Space Odyssey (Arthur C. Clarke)</li>
+        <li>The Hitchhiker's Guide to the Universe (Douglas Adams)</li>
+        <li>Red Mars (Kim Stanley Robinson)</li>
+        <li>Green Mars (Kim Stanley Robinson)</li>
+        <li>Blue Mars (Kim Stanley Robinson)</li>
+      </ul>
+    </div>
+
+    <div class="simple-item life-shell">
+      <div class="life-header">
+        <div>
+          <h2>Game of Life</h2>
+          <p class="life-subtitle">Conway's cellular automaton. Draw cells or load a preset, then watch them evolve.</p>
+        </div>
+        <div class="life-scoreboard">
+          <div class="life-gen">Generation: <span id="life-gen">0</span></div>
+          <div class="life-pop">Population: <span id="life-pop">0</span> <span id="life-delta" class="life-delta"></span></div>
+          <div class="life-status" id="life-status">Ready</div>
+        </div>
+      </div>
+
+      <div class="life-board">
+        <div id="life-grid" class="life-grid" role="grid"></div>
+      </div>
+
+      <div class="life-actions">
+        <button id="life-start" class="life-button">Start</button>
+        <button id="life-pause" class="life-button" disabled>Pause</button>
+        <button id="life-step" class="life-button">Step</button>
+        <button id="life-clear" class="life-button">Clear</button>
+        <button id="life-random" class="life-button">Random</button>
+        <div class="life-preset-wrap">
+          <select id="life-preset" class="life-preset" aria-label="Load preset pattern">
+            <option value="">Load Preset</option>
+            <optgroup label="Spaceships">
+              <option value="glider">Glider</option>
+              <option value="lwss">Lightweight (LWSS)</option>
+              <option value="hwss">Heavyweight (HWSS)</option>
+              <option value="copperhead">Copperhead (c/10)</option>
+              <option value="armada">Armada (3 LWSS)</option>
+            </optgroup>
+            <optgroup label="Oscillators">
+              <option value="pulsar">Pulsar (p3)</option>
+              <option value="pentadecathlon">Pentadecathlon (p15)</option>
+              <option value="galaxy">Kok's Galaxy (p8)</option>
+              <option value="figureEight">Figure Eight (p8)</option>
+            </optgroup>
+            <optgroup label="Methuselahs">
+              <option value="rpentomino">R-pentomino</option>
+              <option value="acorn">Acorn</option>
+              <option value="diehard">Diehard</option>
+              <option value="thunderbird">Thunderbird</option>
+              <option value="piheptomino">Pi-heptomino</option>
+            </optgroup>
+            <optgroup label="Space">
+              <option value="nebula">Nebula</option>
+              <option value="solarSystem">Solar System</option>
+              <option value="constellation">Constellation</option>
+              <option value="bigBang">Big Bang</option>
+              <option value="warpDrive">Warp Drive</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <div class="life-controls">
+        <label class="life-speed-label">
+          <input type="range" id="life-speed" min="30" max="500" value="120" class="life-speed">
+          <span id="life-speed-text">Normal</span>
+        </label>
+        <label class="life-wrap-label">
+          <input type="checkbox" id="life-wrap"> Wrap edges
+        </label>
+      </div>
+
+      <p class="life-help">Click or drag to draw (even while running). Keyboard: Space play/pause, N step, C clear, R random.</p>
+    </div>
+  </div>
+</div>
+
+<footer class="page-footer">&copy; 2025 Mihir Tripathy</footer>
+
+<script src="js/life.js?v=20260209-3"></script>
+</body>
+</html>

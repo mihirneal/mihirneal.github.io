@@ -1,66 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mihir Tripathy - Medical AI Researcher</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&family=Roboto:wght@300&family=Sixtyfour+Convergence&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mihir – AI Researcher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20260209-22">
 </head>
 <body>
-    <canvas id="fmriCanvas"></canvas>
-    <div class="content-overlay">
-        <div class="content-wrapper">
-            <header>
-                <h1 class="sixtyfour-convergence-regular">Mihir Tripathy</h1>
-            </header>
-            <div class="body-content roboto-condensed-regular">
-                <p>Hi! My research focuses on LLMs and Diffusion Models for medicine. I'm also learning about CUDA and multi-GPU programming. My goal is to build technologies crucial for a multi-planetary future.</p>
-                <p>Besides that, I am a science fiction geek, and love to watch rocket launches. I write about space for <a href="https://supercluster.com/">Supercluster.com</a>.</p>
-            </div>
-            <div class="social-links">
-                <a href="https://x.com/mihirneal" target="_blank" class="social-icon">
-                    <img width="24" height="24" src="https://img.icons8.com/ios-filled/50/ffffff/twitterx--v1.png" alt="Twitter"/>
-                </a>
-                <a href="https://github.com/mihirneal" target="_blank" class="social-icon">
-                    <img width="24" height="24" src="https://img.icons8.com/ios-filled/50/ffffff/github.png" alt="GitHub"/>
-                </a>
-                <a href="mailto:hello@mihirneal.com" class="social-icon">
-                    <img width="24" height="24" src="https://img.icons8.com/ios-filled/50/ffffff/new-post.png" alt="Email"/>
-                </a>
-            </div>
-            <main>
-                <h2 class="section-title sixtyfour-convergence-regular">Publications</h2>
-                <section id="publications">
-                    <article class="publication">
-                        <div class="publication-image">
-                            <img src="mindeye.png" alt="MindEye2 Diagram">
-                        </div>
-                        <div class="publication-content roboto-condensed-regular">
-                            <h5 class="roboto-light"><b>MindEye2: Shared-Subject Models Enable fMRI-To-Image With 1 Hour of Data</b></h5>
-                            <h6 class="conference">ICML 2024</h6>
-                            <p>Paul S. Scotti, <b>Mihir Tripathy</b>, Cesar Kadir Torrico Villanueva, Reese Kneeland, Tong Chen, Ashutosh Narang, Charan Santhirasegaran, Jonathan Xu, Thomas Naselaris, Kenneth A. Norman, Tanishq Mathew Abraham.</p>
-                            <div class="publication-links">
-                                <a href="https://arxiv.org/abs/2403.11207">arXiv</a>
-                                <a href="https://medarc-ai.github.io/mindeye2/">Project Page</a>
-                                <a href="https://github.com/MedARC-AI/MindEyeV2">Github</a>
-                            </div>
-                        </div>
-                    </article>
-                </section>
-            </main>
-        </div>
-        <footer class="site-footer">
-            <div class="quote-container">
-                <blockquote class="roboto-condensed-regular">
-                    "When something is important enough, you do it even if the odds are not in your favor.  — Elon Musk"
-                </blockquote>
-            </div>
-        </footer>
+
+<!-- Nav -->
+<nav>
+  <a href="index.html" class="active">Home</a>
+  <a href="research.html">Research</a>
+  <a href="code.html">Code</a>
+  <a href="writing.html">Writing</a>
+  <a href="misc.html">Misc</a>
+</nav>
+
+<!-- Single-viewport content -->
+<div class="home-content">
+  <div class="home-main">
+    <h1>Mihir Tripathy</h1>
+    <p class="tagline">Medical AI Researcher</p>
+
+    <hr class="home-divider">
+
+    <p class="bio">I'm a pre-doctoral research fellow at Baylor College of Medicine working on foundation models for brain fMRI. Previously, I worked on brain fMRI decoding and encoding models.</p>
+    <p class="bio">I spend a lot of time thinking about autonomy, robots, orbital data centers, and extending consciousness to the Moon, Mars, and beyond. <em>Per aspera ad astra.</em></p>
+
+    <div class="social-row">
+      <a href="https://x.com/mihirneal" target="_blank" rel="noopener">
+        <svg class="icon-fill" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+        X
+      </a>
+      <a href="https://github.com/mihirneal" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        GitHub
+      </a>
+      <a href="mailto:hello@mihirneal.com">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        Email
+      </a>
     </div>
-    <script src="fmri_animation.js"></script>
+  </div>
+
+  <footer>
+    <blockquote class="epigraph">
+      "When something is important enough, you do it even if the odds are not in your favor."
+      <cite>— Elon Musk</cite>
+    </blockquote>
+    <p class="copyright">&copy; 2026 Mihir Tripathy</p>
+  </footer>
+</div>
+
 </body>
 </html>

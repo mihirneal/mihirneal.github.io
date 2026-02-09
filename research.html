@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research – Mihir Tripathy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20260209-22">
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <a href="index.html">Home</a>
+  <a href="research.html" class="active">Research</a>
+  <a href="code.html">Code</a>
+  <a href="writing.html">Writing</a>
+  <a href="misc.html">Misc</a>
+</nav>
+
+<!-- Research content -->
+<div class="research-page">
+  <div class="research-hero">
+    <h1>Research</h1>
+    <p>The future of ubiquitous medicine is reasoning foundation models trained on clinical data. </p>
+    <p>I'm interested in what these vision and vision-language models actually learn—and why they fail. Since medical data is inherently limited, models can become overly prior-driven: at inference they often regress toward the mean, leaning on learned dataset priors rather than raw biological signal. I want to study these failure modes to separate causal signal from spurious correlations.</p>
+  </div>
+
+  <div class="pub-list">
+
+    <!-- 2025 -->
+    <div class="pub-entry">
+      <span class="pub-year">2025</span>
+      <div class="pub-body">
+        <div class="paper-card-header">
+          <span class="venue-badge algonauts">Algonauts 2025 – 4th Place</span>
+        </div>
+        <h3>Predicting Brain Responses To Natural Movies With Multimodal LLMs</h3>
+        <p class="authors">Cesar Kadir Torrico Villanueva, Jiaxin Cindy Tu, <strong>Mihir Tripathy</strong>, Connor Lane, Rishab Iyer, Paul S. Scotti</p>
+      </div>
+      <div class="pub-image pub-image--algonauts">
+        <img src="img/algonauts-arch.png?v=20260209-1" alt="Algonauts 2025 model architecture diagram">
+      </div>
+      <div class="pub-body">
+        <p class="description">For our Algonauts 2025 submission, we built a multimodal encoding pipeline that fused features from V-JEPA2 (video), Whisper (audio), Llama 3.2 (text), InternVL3 (vision-language), and Qwen2.5-Omni (vision-language-audio). We linearly projected these model features into a shared latent space, temporally aligned them to fMRI responses, and mapped them to cortical parcels with a lightweight architecture that combines a shared group head with subject-specific residual heads. We then trained hundreds of model variants and stitched parcel-specific subject ensembles for final submission, achieving a mean Pearson correlation of 0.2085 on withheld out-of-distribution movies and placing 4th in the challenge.</p>
+        <div class="paper-links">
+          <a href="https://arxiv.org/abs/2507.19956" target="_blank" rel="noopener">arXiv</a>
+          <a href="https://github.com/MedARC-AI/algonauts2025" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2024 -->
+    <div class="pub-entry">
+      <span class="pub-year">2024</span>
+      <div class="pub-body">
+        <div class="paper-card-header">
+          <span class="venue-badge icml">ICML 2024</span>
+        </div>
+        <h3>MindEye2: Shared-Subject Models Enable fMRI-To-Image With 1 Hour of Data</h3>
+        <p class="authors">Paul S. Scotti, <strong>Mihir Tripathy</strong>, Cesar Kadir Torrico Villanueva, Reese Kneeland, Tong Chen, Ashutosh Narang, Charan Santhirasegaran, Jonathan Xu, Thomas Naselaris, Kenneth A. Norman, Tanishq Mathew Abraham</p>
+      </div>
+      <div class="pub-image pub-image--wide pub-image--mindeye">
+        <img src="img/mindeye-arch.png?v=20260209-1" alt="MindEye2 architecture diagram">
+      </div>
+      <div class="pub-body">
+        <p class="description">In MindEye2, we pretrained one shared model across 7 NSD subjects and fine-tuned on a held-out 8th subject with as little as one scan session (about 2.5% of full data). The core alignment step uses subject-specific ridge mappings from 13k-18k voxel inputs into a 4096-dimensional shared latent, followed by a shared MLP backbone, diffusion prior, and retrieval/low-level submodules. We decode into OpenCLIP ViT-bigG/14 image space and reconstruct pixels with a fine-tuned SDXL unCLIP pipeline (plus caption-guided refinement), reaching state-of-the-art retrieval/reconstruction while preserving strong performance in the 1-hour regime.</p>
+        <div class="paper-links">
+          <a href="https://arxiv.org/abs/2403.11207" target="_blank" rel="noopener">arXiv</a>
+          <a href="https://medarc-ai.github.io/mindeye2/" target="_blank" rel="noopener">Project Page</a>
+          <a href="https://github.com/MedARC-AI/MindEyeV2" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="page-footer">&copy; 2025 Mihir Tripathy</footer>
+
+</body>
+</html>
