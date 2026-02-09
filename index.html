@@ -3,19 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mihir Tripathy – AI Researcher</title>
+  <title>Mihir – AI Researcher</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <!-- Blocking: set theme before first paint to prevent flash -->
-  <script>
-    (function(){
-      var t = localStorage.getItem('theme') ||
-              (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', t);
-    })();
-  </script>
+  <link rel="stylesheet" href="css/styles.css?v=20260209-22">
 </head>
 <body>
 
@@ -23,18 +15,21 @@
 <nav>
   <a href="index.html" class="active">Home</a>
   <a href="research.html">Research</a>
-  <a href="https://supercluster.com/" target="_blank" rel="noopener">Writing</a>
-  <button id="theme-toggle" aria-label="Toggle light / dark mode">☾</button>
+  <a href="code.html">Code</a>
+  <a href="writing.html">Writing</a>
+  <a href="misc.html">Misc</a>
 </nav>
 
 <!-- Single-viewport content -->
 <div class="home-content">
   <div class="home-main">
     <h1>Mihir Tripathy</h1>
-    <p class="tagline">AI Researcher &middot; Neuroscience</p>
+    <p class="tagline">Medical AI Researcher</p>
 
-    <p class="bio">Hi! My research focuses on LLMs and Diffusion Models for medicine. I'm also learning about CUDA and multi-GPU programming. My goal is to build technologies crucial for a multi-planetary future.</p>
-    <p class="bio">Besides that, I am a science fiction geek, and love to watch rocket launches. I write about space for <a href="https://supercluster.com/" target="_blank" rel="noopener">Supercluster.com</a>.</p>
+    <hr class="home-divider">
+
+    <p class="bio">I'm a pre-doctoral research fellow at Baylor College of Medicine working on foundation models for brain fMRI. Previously, I worked on brain fMRI decoding and encoding models.</p>
+    <p class="bio">I spend a lot of time thinking about autonomy, robots, orbital data centers, and extending consciousness to the Moon, Mars, and beyond. <em>Per aspera ad astra.</em></p>
 
     <div class="social-row">
       <a href="https://x.com/mihirneal" target="_blank" rel="noopener">
@@ -57,24 +52,9 @@
       "When something is important enough, you do it even if the odds are not in your favor."
       <cite>— Elon Musk</cite>
     </blockquote>
-    <p class="copyright">&copy; 2025 Mihir Tripathy</p>
+    <p class="copyright">&copy; 2026 Mihir Tripathy</p>
   </footer>
 </div>
 
-<!-- Theme toggle listener -->
-<script>
-  (function(){
-    var root = document.documentElement;
-    var btn = document.getElementById('theme-toggle');
-    function sync(){ btn.textContent = root.getAttribute('data-theme')==='dark' ? '☀' : '☾'; }
-    sync();
-    btn.addEventListener('click', function(){
-      var next = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      sync();
-    });
-  })();
-</script>
 </body>
 </html>
