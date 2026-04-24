@@ -1109,12 +1109,12 @@ nav a.active::after {
 
   body:has(.home-content)::before {
     background:
-      linear-gradient(rgba(9,13,17, 0.78), rgba(9,13,17, 0.93)),
+      linear-gradient(rgba(9,13,17, 0.68), rgba(9,13,17, 0.88)),
       url('../img/artemis-earthrise.jpg?v=20260209-1') 43% 56% / cover no-repeat;
   }
 
   body:has(.home-content)::after {
-    background: radial-gradient(circle at 50% 42%, rgba(9,13,17, 0.3), rgba(9,13,17, 0.76) 56%, rgba(9,13,17, 0.96));
+    background: radial-gradient(circle at 50% 42%, rgba(9,13,17, 0.18), rgba(9,13,17, 0.64) 56%, rgba(9,13,17, 0.91));
   }
 
   /* Touch targets */
