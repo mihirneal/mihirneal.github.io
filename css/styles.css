@@ -17,6 +17,9 @@
   --badge-algo-bg:     rgba(74,110,78, 0.1);
   --badge-algo-text:   #3d6b42;
   --badge-algo-border: rgba(74,110,78, 0.25);
+  --badge-biopsych-bg:     rgba(180,116,73, 0.12);
+  --badge-biopsych-text:   #d9a17b;
+  --badge-biopsych-border: rgba(180,116,73, 0.28);
   --img-border:        rgba(214,220,224, 0.1);
   --img-frame-border:  rgba(214,220,224, 0.24);
   --img-frame-bg:      rgba(255,255,255, 0.02);
@@ -761,6 +764,11 @@ nav a.active {
   padding: 6px;
 }
 
+.pub-image--cortexmae {
+  aspect-ratio: 1238 / 814;
+  background-color: #fff;
+}
+
 .pub-image img {
   display: block;
   width: 100%;
@@ -808,6 +816,12 @@ nav a.active {
   background: var(--badge-algo-bg);
   color: var(--badge-algo-text);
   border: 1px solid var(--badge-algo-border);
+}
+
+.venue-badge.biopsych {
+  background: var(--badge-biopsych-bg);
+  color: var(--badge-biopsych-text);
+  border: 1px solid var(--badge-biopsych-border);
 }
 
 /* Paper links */
@@ -1137,6 +1151,10 @@ nav a.active::after {
 
   .pub-image--algonauts {
     aspect-ratio: 1618 / 1008;
+  }
+
+  .pub-image--cortexmae {
+    aspect-ratio: 1238 / 814;
   }
 
   .pub-image--wide {
