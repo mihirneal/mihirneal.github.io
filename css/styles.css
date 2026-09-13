@@ -1576,6 +1576,10 @@ nav a.active::after {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
@@ -1662,8 +1666,7 @@ nav a.active::after {
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 4px 8px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding: 6px 24px;
   }
 
   body:has(.home-content) nav a {
@@ -1844,5 +1847,55 @@ nav a.active::after {
 
   .home-content .motto {
     font-size: 1rem;
+  }
+}
+
+/* Touch navigation should respond immediately and stay stable while scrolling. */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    transition: none;
+  }
+
+  nav,
+  .research-document nav,
+  body:has(.home-content) nav {
+    background: var(--bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  nav a,
+  nav a::after {
+    transition: none;
+  }
+
+  nav a {
+    touch-action: manipulation;
+  }
+
+  nav a:not(.active):hover {
+    color: var(--text-secondary);
+  }
+
+  nav a:not(.active)::after {
+    display: none;
+  }
+
+  .home-content h1,
+  .home-content .home-focus,
+  .home-content .home-divider,
+  .home-content .bio,
+  .home-content .home-links,
+  .home-content .motto,
+  .home-content footer,
+  .research-hero,
+  .simple-hero,
+  .pub-entry,
+  .simple-item {
+    animation: none;
   }
 }
