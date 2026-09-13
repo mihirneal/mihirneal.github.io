@@ -1228,12 +1228,16 @@ nav a.active {
 }
 
 /* Misc: personal notes, a reading list, and the existing interactive game. */
-.misc-interests,
-.misc-section-header {
+.misc-interests {
   display: grid;
   grid-template-columns: minmax(210px, 0.8fr) minmax(0, 1.5fr);
   align-items: start;
   gap: 32px;
+}
+
+.misc-section-header p {
+  max-width: 65ch;
+  margin-top: 8px;
 }
 
 .misc-interests,
@@ -1255,8 +1259,8 @@ nav a.active {
 .books-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 40px;
-  margin-top: 32px;
+  gap: 24px 40px;
+  margin-top: 24px;
 }
 
 .book-list {
@@ -1265,8 +1269,6 @@ nav a.active {
 
 .book-list li {
   min-width: 0;
-  padding: 14px 0;
-  border-bottom: 1px solid rgba(159,182,200, 0.15);
   overflow-wrap: anywhere;
 }
 
@@ -1382,7 +1384,6 @@ nav a.active {
 @media (max-width: 768px) {
   .writing-grid,
   .misc-interests,
-  .misc-section-header,
   .misc-page .life-shell {
     grid-template-columns: 1fr;
   }
@@ -1395,8 +1396,7 @@ nav a.active {
     column-gap: 20px;
   }
 
-  .misc-interests,
-  .misc-section-header {
+  .misc-interests {
     gap: 20px;
   }
 
