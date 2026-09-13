@@ -7,84 +7,81 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20260209-26">
+  <link rel="stylesheet" href="css/styles.css?v=20260913-12">
 </head>
-<body>
+<body class="research-document misc-document">
 
-<!-- Nav -->
 <nav>
   <a href="index.html">Home</a>
   <a href="research.html">Research</a>
   <a href="code.html">Code</a>
   <a href="writing.html">Writing</a>
-  <a href="misc.html" class="active">Misc</a>
+  <a href="misc.html" class="active" aria-current="page">Misc</a>
 </nav>
 
-<!-- Misc content -->
-<div class="simple-page">
-  <div class="simple-hero">
+<main class="research-page misc-page">
+  <header class="research-hero">
     <h1>Miscellaneous</h1>
-  </div>
+  </header>
 
-  <div class="simple-list">
-    <div class="simple-item misc-notes">
-      <ul class="misc-bullets">
-        <li>I used to write about space for Supercluster.com. I may not be the best writer, but I enjoyed following SpaceX, which drew me back to my interest in space after the Shuttle retired.</li>
-        <li>I'm physically active. I enjoy playing tennis competitively (NTRP 4.5) and lifting weights at the gym. I also love running on trails and hiking. I've been told I'm a good cook (italian, indian, instant-ramen?), if I have enough time.</li>
-        <li>Asimov's Foundation and Robots had the greatest impact on my life, which is why I work on AI and want to extend that to robots. Waymos and robotaxis should have self-defense rights!</li>
-      </ul>
-
-      <h2 class="misc-section-title">Books</h2>
-      <p class="misc-books-intro">I'm a pretty avid reader. Here's a list of books that moved me in some significant way:</p>
-      <h3 class="misc-subsection-title">Non-fiction</h3>
-      <ul class="misc-bullets misc-books-list">
-        <li>Elon Musk (Ashlee Vance)</li>
-        <li>Life 3.0 (Max Tegmark)</li>
-        <li>Elon Musk (Walter Isaacson)</li>
-        <li>Liftoff: Elon Musk and the Desperate Early Days That Launched SpaceX (Eric Berger)</li>
-        <li>Reentry: SpaceX, Elon Musk, and the Reusable Rockets (Eric Berger)</li>
-        <li>The Technological Republic: Hard Power, Soft Belief, and the Future of the West (Alex Karp)</li>
-        <li>Chip War: The Fight for the World's Most Critical Technology (Chris Miller)</li>
-        <li>The Nvidia Way (Tae Kim)</li>
-        <li>Focus: The ASML Way (Marc Hijink)</li>
-        <li>Steve Jobs (Walter Isaacson)</li>
-        <li>The Case for Mars (Robert Zubrin)</li>
-        <li>A New World on Mars (Robert Zubrin)</li>
-        <li>The Case for Space (Robert Zubrin)</li>
-        <li>Empire of AI (Karen Hao)</li>
-        <li>The Infinity Machine: Demis Hassabis, DeepMind, and the Quest for Superintelligence (Sebastian Mallaby)</li>
-      </ul>
-
-      <h3 class="misc-subsection-title">Fiction</h3>
-      <ul class="misc-bullets misc-books-list">
-        <li>The Martian (Andy Weir)</li>
-        <li>Artemis (Andy Weir)</li>
-        <li>Project Hail Mary (Andy Weir)</li>
-        <li>Foundation (Isaac Asimov)</li>
-        <li>Foundation and Empire (Isaac Asimov)</li>
-        <li>Second Foundation (Isaac Asimov)</li>
-        <li>Foundation's Edge (Isaac Asimov)</li>
-        <li>Foundation and Earth (Isaac Asimov)</li>
-        <li>I, Robot (Isaac Asimov)</li>
-        <li>The Caves of Steel (Isaac Asimov)</li>
-        <li>The Naked Sun (Isaac Asimov)</li>
-        <li>The Robots of Dawn (Isaac Asimov)</li>
-        <li>Robots and Empire (Isaac Asimov)</li>
-        <li>Prelude to Foundation (Isaac Asimov)</li>
-        <li>Forward the Foundation (Isaac Asimov)</li>
-        <li>Red Rising (Pierce Brown)</li>
-        <li>Golden Sun (Pierce Brown)</li>
-        <li>Morning Star (Pierce Brown)</li>
-        <li>2001: A Space Odyssey (Arthur C. Clarke)</li>
-        <li>The Hitchhiker's Guide to the Universe (Douglas Adams)</li>
-        <li>Red Mars (Kim Stanley Robinson)</li>
-      </ul>
+  <section class="misc-interests" aria-labelledby="interests-title">
+    <h2 id="interests-title">Interests</h2>
+    <div class="interests-copy">
+      <p>I used to write about space for Supercluster.com. SpaceX drew me back into space after the Shuttle retuired.&#x20;</p>
+      <p>I'm play tennis competitively (NTRP 4.5) and lift weights. I also love running on trails and hiking. I've been told I'm a good cook (italian, indian), if I have enough time.</p>
+      <p>Asimov's Foundation and Robot series had the greatest impact on my life, which is why I work on superintelligence. Waymos and robotaxis should have self-defense rights!</p>
     </div>
+  </section>
 
-    <div class="simple-item life-shell">
+  <section class="misc-books" aria-labelledby="books-title">
+    <header class="misc-section-header">
+      <h2 id="books-title">Books</h2>
+      <p>I'm an avid reader. Here's a list of books that moved me in some significant way.</p>
+    </header>
+    <ul class="book-list books-grid">
+      <li><span class="book-title">Elon Musk</span><span class="book-author">Ashlee Vance</span></li>
+      <li><span class="book-title">Life 3.0</span><span class="book-author">Max Tegmark</span></li>
+      <li><span class="book-title">Elon Musk</span><span class="book-author">Walter Isaacson</span></li>
+      <li><span class="book-title">Liftoff: Elon Musk and the Desperate Early Days That Launched SpaceX</span><span class="book-author">Eric Berger</span></li>
+      <li><span class="book-title">Reentry: SpaceX, Elon Musk, and the Reusable Rockets</span><span class="book-author">Eric Berger</span></li>
+      <li><span class="book-title">The Technological Republic: Hard Power, Soft Belief, and the Future of the West</span><span class="book-author">Alex Karp</span></li>
+      <li><span class="book-title">Chip War: The Fight for the World's Most Critical Technology</span><span class="book-author">Chris Miller</span></li>
+      <li><span class="book-title">The Nvidia Way</span><span class="book-author">Tae Kim</span></li>
+      <li><span class="book-title">Focus: The ASML Way</span><span class="book-author">Marc Hijink</span></li>
+      <li><span class="book-title">Steve Jobs</span><span class="book-author">Walter Isaacson</span></li>
+      <li><span class="book-title">The Case for Mars</span><span class="book-author">Robert Zubrin</span></li>
+      <li><span class="book-title">A New World on Mars</span><span class="book-author">Robert Zubrin</span></li>
+      <li><span class="book-title">The Case for Space</span><span class="book-author">Robert Zubrin</span></li>
+      <li><span class="book-title">Empire of AI</span><span class="book-author">Karen Hao</span></li>
+      <li><span class="book-title">The Infinity Machine: Demis Hassabis, DeepMind, and the Quest for Superintelligence</span><span class="book-author">Sebastian Mallaby</span></li>
+      <li><span class="book-title">The Martian</span><span class="book-author">Andy Weir</span></li>
+      <li><span class="book-title">Artemis</span><span class="book-author">Andy Weir</span></li>
+      <li><span class="book-title">Project Hail Mary</span><span class="book-author">Andy Weir</span></li>
+      <li><span class="book-title">Foundation</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">Foundation and Empire</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">Second Foundation</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">Foundation's Edge</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">Foundation and Earth</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">I, Robot</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">The Caves of Steel</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">The Naked Sun</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">The Robots of Dawn</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">Robots and Empire</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">Prelude to Foundation</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">Forward the Foundation</span><span class="book-author">Isaac Asimov</span></li>
+      <li><span class="book-title">Red Rising</span><span class="book-author">Pierce Brown</span></li>
+      <li><span class="book-title">Golden Sun</span><span class="book-author">Pierce Brown</span></li>
+      <li><span class="book-title">Morning Star</span><span class="book-author">Pierce Brown</span></li>
+      <li><span class="book-title">2001: A Space Odyssey</span><span class="book-author">Arthur C. Clarke</span></li>
+      <li><span class="book-title">The Hitchhiker's Guide to the Universe</span><span class="book-author">Douglas Adams</span></li>
+      <li><span class="book-title">Red Mars</span><span class="book-author">Kim Stanley Robinson</span></li>
+    </ul>
+  </section>
+
+  <section class="life-shell" aria-labelledby="life-title">
       <div class="life-header">
         <div>
-          <h2>Game of Life</h2>
+          <h2 id="life-title">Game of Life</h2>
           <p class="life-subtitle">Conway's cellular automaton. Draw cells or load a preset, then watch them evolve.</p>
         </div>
         <div class="life-scoreboard">
@@ -149,9 +146,8 @@
       </div>
 
       <p class="life-help">Click or drag to draw (even while running). Keyboard: Space play/pause, N step, C clear, R random.</p>
-    </div>
-  </div>
-</div>
+  </section>
+</main>
 
 <script src="js/life.js?v=20260209-3"></script>
 </body>

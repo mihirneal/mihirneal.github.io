@@ -7,9 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20260517-2">
+  <link rel="stylesheet" href="css/styles.css?v=20260913-12">
 </head>
-<body>
+<body class="research-document">
 
 <!-- Nav -->
 <nav>
@@ -21,99 +21,101 @@
 </nav>
 
 <!-- Research content -->
-<div class="research-page">
-  <div class="research-hero">
+<main class="research-page">
+  <header class="research-hero">
     <h1>Research</h1>
-    <p>The future of ubiquitous medicine is reasoning foundation models trained on clinical data.</p>
-    <p>I'm interested in what these vision and vision-language models actually learn—and why they fail. Since medical data is inherently limited, models can become overly prior-driven: at inference they often regress toward the mean, leaning on learned dataset priors rather than raw biological signal. I want to study these failure modes to separate causal signal from spurious correlations.</p>
-  </div>
+    <p>My research spans self-supervised learning for MRI, cross-subject transfer, and multimodal brain decoding. I'm interested in how learned representations capture spatiotemporal structure and biological variability, and how dataset priors affect out-of-distribution generalization.</p>
+  </header>
 
-  <div class="pub-list">
+  <section class="pub-list" aria-labelledby="publications-title">
+    <div class="publication-index">
+      <h2 id="publications-title" class="pub-list-title">Selected publications</h2>
+    </div>
+    <div class="publication-grid">
 
-    <!-- 2026 -->
-    <div class="pub-entry">
-      <span class="pub-year">2026</span>
-      <div class="pub-body">
-        <div class="paper-card-header">
-          <span class="venue-badge icml">ICML 2026</span>
-        </div>
-        <h3>Scaling Vision Transformers for Functional MRI with Flat Maps</h3>
+    <article class="pub-entry" aria-labelledby="cortexmae-title">
+      <figure class="publication-figure">
+        <a href="img/cortexmae-representations.png?v=20260517-1" target="_blank" rel="noopener" aria-label="Open CortexMAE figure at full size">
+          <img src="img/cortexmae-representations.png?v=20260517-1" width="1238" height="814" alt="Comparison of volume, cortical flat map, and parcellation representations of fMRI data.">
+        </a>
+      </figure>
+      <div class="publication-copy">
+        <p class="pub-venue">ICML 2026</p>
+        <h3 id="cortexmae-title">Scaling Vision Transformers for Functional MRI with Flat Maps</h3>
         <p class="authors">Connor Lane, <strong>Mihir Tripathy</strong>, Leema Krishna Murali, Ratna Sagari Grandhi, Shamus Sim Zi Yang, Sam Gijsen, Debojyoti Das, Manish Ram, Utkarsh Kumar Singh, Cesar Kadir Torrico Villanueva, Yuxiang Wei, Will Beddow, Gianfranco Cortes, Suin Cho, Daniel Z. Kaplan, Benjamin Warner, Tanishq M. Abraham, Paul S. Scotti</p>
+        <p class="description">We adapted Vision Transformers to fMRI using cortical flat maps and trained CortexMAE on 2,100 hours of open brain activity data. We also released Brainmarks to evaluate trait prediction and cognitive state decoding.</p>
       </div>
-      <div class="pub-image pub-image--cortexmae">
-        <img src="img/cortexmae-representations.png?v=20260517-1" alt="Spectrum of fMRI data representations for volume, flat map, and parcellation patching">
-      </div>
-      <div class="pub-body">
-        <p class="description">We introduce CortexMAE, a family of self-supervised masked autoencoders for fMRI trained on 2.1K hours of open brain activity data. The work adapts Vision Transformers to functional MRI by converting 3D volumes into cortical flat maps, compares flat-map, parcellation, and volume representations, and releases Brainmarks, an open benchmark suite for evaluating fMRI foundation models across trait prediction and cognitive state decoding.</p>
+      <div class="publication-actions">
         <div class="paper-links">
           <a href="https://arxiv.org/abs/2510.13768" target="_blank" rel="noopener">arXiv</a>
           <a href="https://github.com/MedARC-AI/CortexMAE" target="_blank" rel="noopener">CortexMAE</a>
           <a href="https://github.com/MedARC-AI/Brainmarks" target="_blank" rel="noopener">Brainmarks</a>
-        </div>
       </div>
-    </div>
+      </div>
+    </article>
 
-    <!-- 2025 -->
-    <div class="pub-entry">
-      <span class="pub-year">2025</span>
-      <div class="pub-body">
-        <div class="paper-card-header">
-          <span class="venue-badge algonauts">Algonauts 2025 – 4th Place</span>
-        </div>
-        <h3>Predicting Brain Responses To Natural Movies With Multimodal LLMs</h3>
+    <article class="pub-entry" aria-labelledby="algonauts-title">
+      <figure class="publication-figure">
+        <a href="img/algonauts-arch.png?v=20260209-1" target="_blank" rel="noopener" aria-label="Open Algonauts figure at full size">
+          <img src="img/algonauts-arch.png?v=20260209-1" width="1618" height="1008" loading="lazy" alt="Architecture of the Algonauts 2025 model for predicting brain responses to natural movies.">
+        </a>
+      </figure>
+      <div class="publication-copy">
+        <p class="pub-venue">Algonauts 2025 · 4th place</p>
+        <h3 id="algonauts-title">Predicting Brain Responses To Natural Movies With Multimodal LLMs</h3>
         <p class="authors">Cesar Kadir Torrico Villanueva, Jiaxin Cindy Tu, <strong>Mihir Tripathy</strong>, Connor Lane, Rishab Iyer, Paul S. Scotti</p>
+        <p class="description">Our multimodal pipeline combines video, audio, and language features to predict brain responses to movies. It placed fourth in Algonauts 2025, with a mean Pearson correlation of 0.2085 on withheld, out-of-distribution movies.</p>
       </div>
-      <div class="pub-image pub-image--algonauts">
-        <img src="img/algonauts-arch.png?v=20260209-1" alt="Algonauts 2025 model architecture diagram">
-      </div>
-      <div class="pub-body">
-        <p class="description">For our Algonauts 2025 submission, we built a multimodal encoding pipeline that fused features from V-JEPA2 (video), Whisper (audio), Llama 3.2 (text), InternVL3 (vision-language), and Qwen2.5-Omni (vision-language-audio). We linearly projected these model features into a shared latent space, temporally aligned them to fMRI responses, and mapped them to cortical parcels with a lightweight architecture that combines a shared group head with subject-specific residual heads. We then trained hundreds of model variants and stitched parcel-specific subject ensembles for final submission, achieving a mean Pearson correlation of 0.2085 on withheld out-of-distribution movies and placing 4th in the challenge.</p>
+      <div class="publication-actions">
         <div class="paper-links">
           <a href="https://arxiv.org/abs/2507.19956" target="_blank" rel="noopener">arXiv</a>
           <a href="https://github.com/MedARC-AI/algonauts2025" target="_blank" rel="noopener">GitHub</a>
-        </div>
       </div>
-    </div>
+      </div>
+    </article>
 
-    <div class="pub-entry">
-      <div class="pub-body">
-        <div class="paper-card-header">
-          <span class="venue-badge biopsych">Biological Psychiatry 2025</span>
-        </div>
-        <h3>Transformer-Based Foundation Model for Functional Neuroimaging</h3>
+    <article class="pub-entry" aria-labelledby="neuroimaging-title">
+      <figure class="publication-figure">
+        <a href="img/neuroimaging-architecture.png" target="_blank" rel="noopener" aria-label="Open the functional neuroimaging model figure at full size">
+          <img src="img/neuroimaging-architecture.png" width="1720" height="1104" loading="lazy" alt="Functional neuroimaging model architecture: masked brain-parcel time series receive spatial and temporal embeddings, then pass through a transformer encoder and decoder to reconstruct the signal.">
+        </a>
+      </figure>
+      <div class="publication-copy">
+        <p class="pub-venue">Biological Psychiatry · 2025</p>
+        <h3 id="neuroimaging-title">Transformer-Based Foundation Model for Functional Neuroimaging</h3>
         <p class="authors">Teddy Akiki, <strong>Mihir Tripathy</strong>, Xue Zhang, Adam Pines, Josue Ortega Caro, Syed Rizvi, Christopher Averill, David van Dijk, Chadi Abdallah, Leanne Williams</p>
-        <p class="description">Published in <em>Biological Psychiatry</em>, Volume 97, Issue 9, pages S160-S161, presenting a transformer-based foundation model approach for functional neuroimaging.</p>
+        <p class="description">A transformer-based foundation model approach for functional neuroimaging, published in <em>Biological Psychiatry</em>, Volume 97, Issue 9, pages S160–S161.</p>
+      </div>
+      <div class="publication-actions">
         <div class="paper-links">
           <a href="https://www.biologicalpsychiatryjournal.com/article/S0006-3223(25)00494-9/abstract" target="_blank" rel="noopener">Biological Psychiatry</a>
-        </div>
       </div>
-    </div>
+      </div>
+    </article>
 
-    <!-- 2024 -->
-    <div class="pub-entry">
-      <span class="pub-year">2024</span>
-      <div class="pub-body">
-        <div class="paper-card-header">
-          <span class="venue-badge icml">ICML 2024</span>
-        </div>
-        <h3>MindEye2: Shared-Subject Models Enable fMRI-To-Image With 1 Hour of Data</h3>
+    <article class="pub-entry" aria-labelledby="mindeye2-title">
+      <figure class="publication-figure">
+        <a href="img/mindeye-arch.png?v=20260209-1" target="_blank" rel="noopener" aria-label="Open MindEye2 figure at full size">
+          <img src="img/mindeye-arch.png?v=20260209-1" width="1938" height="844" loading="lazy" alt="MindEye2 architecture, from shared-subject fMRI representations to image retrieval and reconstruction.">
+        </a>
+      </figure>
+      <div class="publication-copy">
+        <p class="pub-venue">ICML 2024</p>
+        <h3 id="mindeye2-title">MindEye2: Shared-Subject Models Enable fMRI-To-Image With 1 Hour of Data</h3>
         <p class="authors">Paul S. Scotti, <strong>Mihir Tripathy</strong>, Cesar Kadir Torrico Villanueva, Reese Kneeland, Tong Chen, Ashutosh Narang, Charan Santhirasegaran, Jonathan Xu, Thomas Naselaris, Kenneth A. Norman, Tanishq Mathew Abraham</p>
+        <p class="description">We trained a shared model across seven participants, then adapted it to a new participant using as little as one hour of fMRI data for image retrieval and reconstruction.</p>
       </div>
-      <div class="pub-image pub-image--wide pub-image--mindeye">
-        <img src="img/mindeye-arch.png?v=20260209-1" alt="MindEye2 architecture diagram">
-      </div>
-      <div class="pub-body">
-        <p class="description">In MindEye2, we pretrained one shared model across 7 NSD subjects and fine-tuned on a held-out 8th subject with as little as one scan session (about 2.5% of full data). The core alignment step uses subject-specific ridge mappings from 13k-18k voxel inputs into a 4096-dimensional shared latent, followed by a shared MLP backbone, diffusion prior, and retrieval/low-level submodules. We decode into OpenCLIP ViT-bigG/14 image space and reconstruct pixels with a fine-tuned SDXL unCLIP pipeline (plus caption-guided refinement), reaching state-of-the-art retrieval/reconstruction while preserving strong performance in the 1-hour regime.</p>
+      <div class="publication-actions">
         <div class="paper-links">
           <a href="https://arxiv.org/abs/2403.11207" target="_blank" rel="noopener">arXiv</a>
           <a href="https://medarc-ai.github.io/mindeye2/" target="_blank" rel="noopener">Project Page</a>
           <a href="https://github.com/MedARC-AI/MindEyeV2" target="_blank" rel="noopener">GitHub</a>
-        </div>
       </div>
+      </div>
+    </article>
     </div>
-
-  </div>
-</div>
+  </section>
+</main>
 
 </body>
 </html>
