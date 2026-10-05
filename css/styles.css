@@ -206,6 +206,59 @@ nav a.active {
   white-space: nowrap;
 }
 
+/* Recently: a short dated list under the bio */
+.home-recent {
+  margin-top: 26px;
+  max-width: 440px;
+}
+
+.home-recent h2 {
+  margin: 0 0 8px;
+  color: #aebcc6;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-recent ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.home-recent li {
+  display: flex;
+  gap: 14px;
+  color: #e0e6ea;
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.home-recent li + li {
+  margin-top: 4px;
+}
+
+.home-recent .recent-when {
+  flex: none;
+  width: 2.6em;
+  color: #aebcc6;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-recent a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(159,182,200, 0.5);
+  text-underline-offset: 4px;
+}
+
+.home-recent a:hover {
+  color: var(--accent-hover);
+  text-decoration-color: currentColor;
+}
+
 .home-links {
   display: flex;
   flex-wrap: wrap;
@@ -777,6 +830,19 @@ nav a.active {
   border-top: 1px solid rgba(159,182,200, 0.25);
 }
 
+.pub-list-more {
+  color: var(--accent);
+  font-size: 1rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(159,182,200, 0.4);
+  text-underline-offset: 4px;
+}
+
+.pub-list-more:hover {
+  color: var(--accent-hover);
+  text-decoration-color: currentColor;
+}
+
 .research-page .pub-list-title {
   margin: 0;
   font-size: 1.375rem;
@@ -1145,7 +1211,7 @@ nav a.active {
   margin-top: 56px;
 }
 
-.writing-year > h2,
+.writing-year > h3,
 .misc-interests > h2,
 .misc-section-header h2 {
   margin: 0;
@@ -1155,9 +1221,32 @@ nav a.active {
   line-height: 1.4;
 }
 
-.writing-year > h2 {
+.writing-year > h3 {
   margin-bottom: 24px;
   padding-top: 20px;
+  border-top: 1px solid rgba(159,182,200, 0.25);
+}
+
+.writing-page .research-hero p {
+  margin-top: 18px;
+}
+
+/* Writing groups: research pieces first, then space journalism by year. */
+.writing-group + .writing-group {
+  margin-top: 88px;
+}
+
+.writing-group-title {
+  margin: 0 0 20px;
+  color: var(--text);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.writing-year-plain {
+  padding-top: 28px;
   border-top: 1px solid rgba(159,182,200, 0.25);
 }
 
@@ -1440,6 +1529,7 @@ nav a.active {
 .home-content .home-divider { animation: fadeUp 0.6s ease-out 0.1s both; }
 .home-content .bio { animation: fadeUp 0.55s ease-out 0.15s both; }
 .home-content .bio + .bio { animation-delay: 0.22s; }
+.home-content .home-recent { animation: fadeUp 0.55s ease-out 0.24s both; }
 .home-content .home-links { animation: fadeUp 0.55s ease-out 0.26s both; }
 .home-content .motto { animation: fadeUp 0.55s ease-out 0.29s both; }
 .home-content footer      { animation: fadeUp 0.5s ease-out 0.36s both; }
