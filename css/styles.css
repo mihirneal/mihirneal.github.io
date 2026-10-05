@@ -1899,3 +1899,175 @@ nav a.active::after {
     animation: none;
   }
 }
+
+/* -----------------------------------------------------------------------
+   Design polish – shared atmosphere, venue badges, metadata type, footer
+   ----------------------------------------------------------------------- */
+:root {
+  --font-meta:         'IBM Plex Mono', ui-monospace, monospace;
+  --badge-algo-text:   #a9cfa9;
+  --badge-algo-bg:     rgba(110,160,110, 0.12);
+  --badge-algo-border: rgba(110,160,110, 0.3);
+}
+
+/* A faint earth-glow so inner pages share the homepage's mood. */
+body.research-document {
+  background:
+    radial-gradient(ellipse 60% 520px at 85% 40px, rgba(120,160,195, 0.2), transparent 70%),
+    radial-gradient(ellipse 30% 260px at 85% 60px, rgba(200,220,235, 0.08), transparent 70%),
+    var(--bg);
+  background-repeat: no-repeat;
+}
+
+/* Inner-page nav starts clear over the glow and turns solid once you scroll. */
+@keyframes nav-solidify {
+  from { background-color: rgba(9,13,17, 0); }
+  to   { background-color: rgba(9,13,17, 0.94); }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 769px) and (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .research-document nav {
+      animation: nav-solidify linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 120px;
+    }
+  }
+}
+
+/* Homepage nav: fade into the photo instead of sitting on it as a band. */
+@media (min-width: 769px) and (hover: hover) {
+  body:has(.home-content) nav {
+    background: linear-gradient(to bottom, rgba(9,13,17, 0.7), rgba(9,13,17, 0));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Research figures: dim the white paper slightly, full brightness on hover. */
+.research-page .publication-figure a {
+  border-color: rgba(159,182,200, 0.3);
+  border-radius: 6px;
+  filter: brightness(0.88);
+  transition: filter 0.25s ease;
+}
+
+.research-page .publication-figure a:hover {
+  filter: none;
+}
+
+/* Venue badges */
+.research-page .pub-venue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  color: #aebfcd;
+  font-family: var(--font-meta);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.venue-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border: 1px solid var(--badge-icml-border);
+  border-radius: 999px;
+  color: var(--badge-icml-text);
+  background: var(--badge-icml-bg);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.venue-badge.venue-algonauts {
+  color: var(--badge-algo-text);
+  background: var(--badge-algo-bg);
+  border-color: var(--badge-algo-border);
+}
+
+.venue-badge.venue-journal {
+  color: var(--badge-biopsych-text);
+  background: var(--badge-biopsych-bg);
+  border-color: var(--badge-biopsych-border);
+}
+
+/* Small metadata in a mono face for contrast with the serif. */
+.writing-meta,
+.code-repository,
+.page-footer {
+  font-family: var(--font-meta);
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+}
+
+.writing-meta {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Code and Misc: narrower label column that stays in view while scrolling. */
+@media (min-width: 769px) {
+  .code-group,
+  .misc-interests {
+    grid-template-columns: minmax(180px, 0.5fr) minmax(0, 1.6fr);
+  }
+
+  .code-group-header {
+    position: sticky;
+    top: 104px;
+  }
+}
+
+/* Books: series collapsed into one entry. */
+.book-series {
+  display: block;
+  margin-top: 4px;
+  color: #8f9da8;
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* Inner-page footer */
+.page-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 24px;
+  width: calc(100% - clamp(48px, 15vw, 240px));
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 0 48px;
+  border-top: 1px solid rgba(159,182,200, 0.25);
+  color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+.page-footer a {
+  color: #c0d0dc;
+}
+
+.page-footer a:hover {
+  color: var(--text);
+}
+
+@media (max-width: 768px) {
+  .page-footer {
+    width: calc(100% - 80px);
+  }
+}
+
+@media (max-width: 600px) {
+  .page-footer {
+    width: calc(100% - 48px);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
