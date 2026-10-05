@@ -2044,6 +2044,21 @@ body.research-document {
   gap: 8px;
 }
 
+.footer-logo {
+  display: inline-flex;
+  color: #d4e2eb;
+}
+
+.footer-logo:hover {
+  color: var(--text);
+}
+
+.footer-logo svg {
+  display: block;
+  width: 44px;
+  height: 44px;
+}
+
 .page-footer .social-row a {
   width: 44px;
   height: 44px;
