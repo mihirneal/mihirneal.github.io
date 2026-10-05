@@ -1904,7 +1904,6 @@ nav a.active::after {
    Design polish – shared atmosphere, venue badges, metadata type, footer
    ----------------------------------------------------------------------- */
 :root {
-  --font-meta:         'IBM Plex Mono', ui-monospace, monospace;
   --badge-algo-text:   #a9cfa9;
   --badge-algo-bg:     rgba(110,160,110, 0.12);
   --badge-algo-border: rgba(110,160,110, 0.3);
@@ -1962,22 +1961,19 @@ body.research-document {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px 12px;
-  color: #aebfcd;
-  font-family: var(--font-meta);
-  font-size: 0.8rem;
-  letter-spacing: 0.02em;
+  color: #c3d1dc;
+  font-size: 1rem;
 }
 
 .venue-badge {
   display: inline-block;
-  padding: 2px 10px;
+  padding: 1px 12px;
   border: 1px solid var(--badge-icml-border);
   border-radius: 999px;
   color: var(--badge-icml-text);
   background: var(--badge-icml-bg);
   font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 
 .venue-badge.venue-algonauts {
@@ -1992,18 +1988,17 @@ body.research-document {
   border-color: var(--badge-biopsych-border);
 }
 
-/* Small metadata in a mono face for contrast with the serif. */
-.writing-meta,
-.code-repository,
-.page-footer {
-  font-family: var(--font-meta);
-  font-size: 0.82rem;
-  letter-spacing: 0.01em;
+/* Co-first author marker */
+.research-page .authors sup {
+  margin-left: 1px;
+  font-size: 0.75em;
 }
 
-.writing-meta {
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.research-page .author-note {
+  margin: -8px 0 16px;
+  color: #b4c0ca;
+  font-size: 0.95rem;
+  font-style: italic;
 }
 
 /* Code and Misc: narrower label column that stays in view while scrolling. */
@@ -2039,23 +2034,29 @@ body.research-document {
   width: calc(100% - clamp(48px, 15vw, 240px));
   max-width: 1120px;
   margin: 0 auto;
-  padding: 28px 0 48px;
+  padding: 24px 0 40px;
   border-top: 1px solid rgba(159,182,200, 0.25);
-  color: var(--text-muted);
+  color: var(--text-secondary);
+  font-size: 1rem;
 }
 
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
+.page-footer .social-row {
+  gap: 8px;
 }
 
-.page-footer a {
-  color: #c0d0dc;
+.page-footer .social-row a {
+  width: 44px;
+  height: 44px;
+  color: #bec9d1;
 }
 
-.page-footer a:hover {
+.page-footer .social-row a:hover {
   color: var(--text);
+}
+
+.page-footer .social-row svg {
+  width: 19px;
+  height: 19px;
 }
 
 @media (max-width: 768px) {
@@ -2067,7 +2068,16 @@ body.research-document {
 @media (max-width: 600px) {
   .page-footer {
     width: calc(100% - 48px);
-    flex-direction: column;
-    align-items: flex-start;
+    padding-bottom: 32px;
   }
+
+  .page-footer .social-row {
+    margin-left: -12px;
+  }
+}
+
+/* Game of Life: make the grid lines visible against the dark page. */
+.misc-page .life-grid {
+  background: rgba(159,182,200, 0.2);
+  border-color: rgba(159,182,200, 0.3);
 }
