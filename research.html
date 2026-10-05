@@ -4,13 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Research – Mihir Tripathy</title>
+  <meta name="description" content="Publications on foundation models for fMRI and structural MRI, including CortexMAE (ICML 2026 spotlight) and MindEye2 (ICML 2024 spotlight).">
+  <link rel="canonical" href="https://mihirneal.com/research.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mihir Tripathy">
+  <meta property="og:title" content="Research – Mihir Tripathy">
+  <meta property="og:description" content="Publications on foundation models for fMRI and structural MRI, including CortexMAE (ICML 2026 spotlight) and MindEye2 (ICML 2024 spotlight).">
+  <meta property="og:url" content="https://mihirneal.com/research.html">
+  <meta property="og:image" content="https://mihirneal.com/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Earth rising over the lunar horizon.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@mihirneal">
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=20261005-6">
+  <link rel="stylesheet" href="css/styles.css?v=20261005-7">
 </head>
 <body class="research-document">
 
@@ -27,12 +40,13 @@
 <main class="research-page">
   <header class="research-hero">
     <h1>Research</h1>
-    <p>My research spans self-supervised learning for MRI, cross-subject transfer, and multimodal brain decoding. I'm interested in how learned representations capture spatiotemporal structure and biological variability, and how dataset priors affect out-of-distribution generalization.</p>
+    <p>Most of my work is self-supervised pretraining on fMRI and structural MRI: how to represent the data (volumes, cortical flat maps, parcels), how to scale it, and how to evaluate what the models learn. I care most about representations that transfer across people, scanners, and tasks, including clinical ones like the early detection of neurodegeneration.</p>
   </header>
 
   <section class="pub-list" aria-labelledby="publications-title">
     <div class="publication-index">
       <h2 id="publications-title" class="pub-list-title">Selected publications</h2>
+      <a class="pub-list-more" href="https://scholar.google.com/citations?user=RV8JB3YAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar <span aria-hidden="true">↗</span></a>
     </div>
     <div class="publication-grid">
 
@@ -43,7 +57,7 @@
         </a>
       </figure>
       <div class="publication-copy">
-        <p class="pub-venue"><span class="venue-badge">ICML 2026</span></p>
+        <p class="pub-venue"><span class="venue-badge">ICML 2026</span> Spotlight</p>
         <h3 id="cortexmae-title">Scaling Vision Transformers for Functional MRI with Flat Maps</h3>
         <p class="authors">Connor Lane, <strong>Mihir Tripathy</strong>, <em>et al.</em></p>
         <p class="description">We adapted Vision Transformers to fMRI using cortical flat maps and trained CortexMAE on 2,100 hours of open brain activity data. We also released Brainmarks to evaluate trait prediction and cognitive state decoding.</p>
@@ -104,7 +118,7 @@
         </a>
       </figure>
       <div class="publication-copy">
-        <p class="pub-venue"><span class="venue-badge">ICML 2024</span></p>
+        <p class="pub-venue"><span class="venue-badge">ICML 2024</span> Spotlight</p>
         <h3 id="mindeye2-title">MindEye2: Shared-Subject Models Enable fMRI-To-Image With 1 Hour of Data</h3>
         <p class="authors">Paul S. Scotti, <strong>Mihir Tripathy</strong>, <em>et al.</em></p>
         <p class="description">We trained a shared model across seven participants, then adapted it to a new participant using as little as one hour of fMRI data for image retrieval and reconstruction.</p>
@@ -128,6 +142,7 @@
     <a href="https://x.com/mihirneal" target="_blank" rel="noopener" aria-label="X" title="X"><svg class="icon-fill" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
     <a href="https://github.com/mihirneal" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
     <a href="https://www.linkedin.com/in/mihirtripathy/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+    <a href="https://scholar.google.com/citations?user=RV8JB3YAAAAJ&amp;hl=en" target="_blank" rel="noopener" aria-label="Google Scholar" title="Google Scholar"><svg viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg></a>
   </div>
 </footer>
 
