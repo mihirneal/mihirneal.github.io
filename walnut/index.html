@@ -262,7 +262,9 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
      --art is where its tile ends; the text starts just below and the brain's lower edge fades into the page there. */
   .hero { --art: calc(64px + min(66vw, 420px) * var(--hero-ratio, 1.238)); }
   .hero::after { background: linear-gradient(180deg, rgba(9,13,17,.08) 0, rgba(9,13,17,.08) calc(var(--art) - 120px), rgba(9,13,17,.9) calc(var(--art) - 12px), var(--bg) var(--art)); }
-  .hero-main { padding-top: calc(var(--art) - 104px + 8px); }
+  .hero-main { padding-top: calc(var(--art) - 104px + 40px); }
+  /* the scan's caption sits centred right under the brain it describes, not down by the stats */
+  .scan-credit { top: calc(var(--art) - 2px); bottom: auto; left: var(--gutter); right: var(--gutter); text-align: center; }
   /* Single column: lists that sit side by side on desktop stack here, and each one's closing hairline would land a
      section's padding away from the next section's border (double lines). Tighter rhythm, no trailing hairline on the
      last item, and use-case cards separated by their images and space instead of rules. */
@@ -285,13 +287,10 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
 }
 @media (max-width: 520px) {
   nav.site { gap: 22px; }
-  .sizes { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .sizes figure { grid-template-columns: 52% minmax(0, 1fr); align-items: center; gap: 20px; }
-  .sizes figcaption { gap: 4px; }
-  .sizes figcaption b { font-size: 1.7rem; }
-  .sizes .dot { display: none; }
-  .sizes .seq { display: block; color: var(--faint); }
-  .sizes-scale i { width: calc(52% / 3); }
+  /* one crop per row, full width, caption underneath; the 10 mm bar is a third of a crop's width */
+  .sizes { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .sizes figure { gap: 10px; }
+  .sizes-scale i { width: calc(100% / 3); max-width: none; }
   .controls #modeSeg { margin-left: 0; }
   .tag.tr { display: none; }
   .seg button { padding: 2px 12px; }
@@ -706,6 +705,11 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
   // ------------------------------------------------------------ case data
   const ORDER = ['glioma', 'metastases', 'ms', 'microbleeds', 'stroke'];
   let FIND = [], HERO = null;
+  // a case from a different dataset than its finding's default names its own source
+  const SOURCE_BY_PID = {
+    'sub-ms3seg065': { source: 'MS3SEG', sourceLong: "FLAIR, MS3SEG. The amber map is Walnut's own prediction, made without ever training on this patient." },
+  };
+  const srcOf = c => ({ ...COPY[c.finding], ...(SOURCE_BY_PID[c.pid] || {}) });
   const loadImg = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error(src)); i.src = src; });
   function prepare(c) {
     if (c._p) return c._p;
@@ -865,7 +869,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
     }
     $('viewerCap').textContent = cp.tagline;
     $('dossier').innerHTML = `<h3>${cp.name}</h3><p class="tagline">${cp.tagline}</p>${cp.body.map(p => `<p class="body">${p}</p>`).join('')}
-      ${table}<p class="source">${c.walnut ? cp.sourceLong : cp.source + '. The colored regions are the expert annotation.'}</p>`;
+      ${table}<p class="source">${c.walnut ? srcOf(c).sourceLong : srcOf(c).source + '. The colored regions are the expert annotation.'}</p>`;
   }
   async function selectCase(fi, pi, focusTab) {
     st.fi = fi; st.pi = pi; const f = FIND[fi], c = cur();
@@ -880,7 +884,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
     $('contrastSeg').innerHTML = names.map(n => `<button type="button" id="seq-${n.replace(/\W/g, '')}" data-c="${n}" aria-pressed="false">${n}</button>`).join('');
     $('mode-compare').hidden = !c.walnut;
     $('depth').max = $('depthH').max = String(c.n - 1);
-    $('tagCase').textContent = `${COPY[c.finding].source} \u00b7 patient ${pi + 1}`;
+    $('tagCase').textContent = `${srcOf(c).source} \u00b7 patient ${pi + 1}`;
     st.ready = true; $('loading').hidden = true;
     st.k = -1; setSlice(c.start); setContrast(st.contrast); buildDossier(); setMode(st.mode); kick();
     f.cases.forEach(o => prepare(o).catch(() => {}));
