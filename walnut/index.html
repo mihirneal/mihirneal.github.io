@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Walnut</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta name="description" content="Walnut is a foundation model for brain MRI, trained on 250,000 scans. It finds tumors, strokes, MS plaques and microbleeds a few millimeters across, and tracks neurodegeneration over time.">
+<meta property="og:title" content="Walnut">
+<meta property="og:description" content="A foundation model for brain MRI. Reads every scan, flags what matters.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* Layout: mihirneal.com's dark editorial column, run as a product page. The hero puts a live standard brain where
+   the homepage puts Earthrise. The UI uses only the site's blue-grays; amber and coral appear only as
+   Walnut's outlines on the scans (and the legend swatches that name them). */
+:root {
+  --bg:          #090d11;
+  --bg-nav:      rgba(9, 13, 17, 0.82);
+  --text:        #f1f3f4;
+  --text-2:      #e0e6ea;
+  --text-3:      #d6dce0;
+  --muted:       #aebcc6;
+  --faint:       #7d8b95;
+  --accent:      #9fb6c8;
+  --accent-hi:   #c2d4df;
+  --ice:         #d4e2eb;
+  --line:        rgba(159, 182, 200, 0.14);
+  --line-2:      rgba(159, 182, 200, 0.28);
+  --walnut:      #e9a84f;
+  --coral:       #ef6a55;
+  --expert:      #a9d4ef;
+  --serif:       'EB Garamond', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --gutter:      max(20px, min(7.5vw, 120px));
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--serif); font-weight: 500; font-size: 18px; line-height: 1.7;
+  color: var(--text); background: var(--bg);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+a { color: var(--accent); text-decoration: none; transition: color .2s; }
+a:hover { color: var(--accent-hi); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+em { font-style: italic; }
+
+nav.site {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; gap: 32px; min-height: 56px;
+  padding: env(safe-area-inset-top, 0px) var(--gutter) 0;
+  background: var(--bg-nav); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(159, 182, 200, 0.12);
+  overflow-x: auto; scrollbar-width: none;
+}
+nav.site a { position: relative; color: var(--text-3); font-size: 1.05rem; letter-spacing: .02em; white-space: nowrap; }
+nav.site a:hover, nav.site a.active { color: var(--text); }
+nav.site a.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: var(--accent); }
+
+.wrap { width: 100%; max-width: 1240px; margin: 0 auto; }
+.label { color: var(--muted); font-size: .9rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; line-height: 1.4; }
+.divider { width: 64px; height: 1px; border: 0; background: var(--line-2); }
+.text-link {
+  display: inline-flex; align-items: center; min-height: 44px; font-size: 1.05rem; color: var(--text);
+  text-decoration: underline; text-decoration-color: rgba(159,182,200,.5); text-decoration-thickness: 1px; text-underline-offset: 6px;
+}
+.text-link:hover { color: var(--accent-hi); text-decoration-color: currentColor; }
+.button {
+  display: inline-flex; align-items: center; min-height: 46px; padding: 4px 22px; border-radius: 999px;
+  border: 1px solid var(--line-2); background: transparent; color: var(--text); font-size: 1.05rem; font-weight: 500; letter-spacing: .01em;
+  transition: border-color .2s, background .2s, color .2s;
+}
+.button:hover { border-color: var(--accent); background: rgba(159, 182, 200, 0.08); color: var(--text); }
+
+/* ---------------------------------------------------------------- Hero */
+.hero {
+  position: relative; isolation: isolate; min-height: min(92vh, 880px);
+  display: flex; align-items: center; padding: 120px var(--gutter) 88px; overflow: hidden;
+}
+#heroScan { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; display: block; }
+.hero::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--bg) 0%, rgba(9,13,17,.97) 22%, rgba(9,13,17,.8) 40%, rgba(9,13,17,.1) 66%, rgba(9,13,17,.02)),
+    linear-gradient(0deg, var(--bg), transparent 26%, transparent 82%, rgba(9,13,17,.5));
+}
+.hero-main { width: 100%; max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+.hero h1 { font-weight: 500; font-size: clamp(5.2rem, 12.5vw, 9rem); letter-spacing: -.045em; line-height: .94; }
+.hero .focus { font-size: clamp(1.5rem, 2.8vw, 1.9rem); font-weight: 400; font-style: italic; color: var(--ice); line-height: 1.25; max-width: 20ch; }
+.hero .bio { max-width: 470px; font-size: 1.15rem; font-weight: 400; color: var(--text-2); line-height: 1.6; text-wrap: pretty; }
+.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px; }
+.hero-stats { display: flex; flex-wrap: wrap; gap: 14px 40px; margin-top: 8px; }
+.hero-stats div { display: grid; }
+.hero-stats b { font-size: 2rem; font-weight: 400; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.hero-stats span { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.scan-credit { position: absolute; right: max(20px, env(safe-area-inset-right, 0px)); bottom: 18px; color: var(--faint); font-size: .8rem; line-height: 1.3; text-align: right; }
+
+/* ---------------------------------------------------------------- Sections */
+section.band { padding: 104px var(--gutter); border-top: 1px solid var(--line); }
+.section-head { display: grid; gap: 14px; max-width: 760px; margin-bottom: 48px; }
+.section-head h2, .closing h2 { font-weight: 400; font-size: clamp(2.3rem, 4.6vw, 3.5rem); letter-spacing: -.025em; line-height: 1.04; text-wrap: balance; }
+.section-head h2 em, .closing h2 em { color: var(--ice); }
+.lede { font-size: 1.15rem; font-weight: 400; color: var(--text-2); line-height: 1.6; max-width: 62ch; text-wrap: pretty; }
+.note { font-size: .92rem; color: var(--faint); line-height: 1.5; }
+
+/* ---------------------------------------------------------------- Probe */
+.tabs { display: flex; gap: 6px 28px; flex-wrap: wrap; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+.tab { position: relative; display: grid; text-align: left; padding: 10px 0 14px; min-height: 44px; color: var(--muted); font-size: 1.15rem; line-height: 1.25; transition: color .2s; }
+.tab small { font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+.tab:hover, .tab[aria-selected="true"] { color: var(--text); }
+.tab[aria-selected="true"]::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--accent); }
+.probe-grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
+.viewer { display: grid; gap: 14px; min-width: 0; }
+.controls { display: flex; flex-wrap: wrap; gap: 10px 12px; }
+.controls #modeSeg { margin-left: auto; }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 999px; padding: 3px; gap: 2px; }
+.seg button { min-height: 36px; padding: 2px 15px; border-radius: 999px; color: var(--text-3); font-size: .98rem; transition: background .2s, color .2s; }
+.seg button:hover { color: var(--text); }
+.seg button[aria-pressed="true"] { background: rgba(159,182,200,.16); color: var(--text); }
+.stage {
+  position: relative; width: 100%; max-width: 100%; aspect-ratio: 5 / 6; max-height: min(78vh, 740px);
+  background: #000; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; touch-action: pan-y; cursor: crosshair;
+}
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage .tag { position: absolute; z-index: 2; pointer-events: none; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); line-height: 1.3; }
+.tag.tl { top: 12px; left: 14px; }
+.tag.tl b { display: block; font-weight: 500; font-size: 1.05rem; letter-spacing: .04em; color: var(--text); }
+.tag.tr { top: 12px; right: 52px; text-align: right; }
+.tag.side { top: 50%; transform: translateY(-50%); font-size: .9rem; color: var(--faint); }
+.tag.side.r { left: 12px; }
+.tag.side.l { right: 52px; }
+.tag.br { bottom: 12px; right: 52px; text-align: right; font-variant-numeric: tabular-nums; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--faint); font-style: italic; z-index: 1; padding: 24px; text-align: center; }
+.rail { position: absolute; z-index: 3; top: 16px; bottom: 16px; right: 10px; width: 30px; display: flex; justify-content: center; }
+.rail input { writing-mode: vertical-lr; direction: rtl; width: 30px; height: 100%; margin: 0; appearance: none; -webkit-appearance: none; background: transparent; cursor: ns-resize; }
+.rail input::-webkit-slider-runnable-track { width: 1px; background: var(--line-2); }
+.rail input::-moz-range-track { width: 1px; background: var(--line-2); }
+.rail input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 6px; border-radius: 3px; background: var(--accent-hi); margin-left: -8.5px; box-shadow: 0 0 0 3px #000; }
+.rail input::-moz-range-thumb { width: 18px; height: 6px; border-radius: 3px; border: 0; background: var(--accent-hi); box-shadow: 0 0 0 3px #000; }
+.readout { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; min-height: 30px; font-size: 1rem; color: var(--text-3); }
+.readout .label { font-size: .8rem; }
+.key { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.sw { width: 14px; height: 10px; border-radius: 2px; flex: none; }
+.sw.a { background: rgba(233,168,79,.55); box-shadow: inset 0 0 0 1.5px var(--walnut); }
+.sw.b { background: rgba(239,106,85,.6); box-shadow: inset 0 0 0 1.5px var(--coral); }
+.sw.x { background: transparent; box-shadow: inset 0 0 0 1.5px var(--expert); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .95rem; color: var(--muted); }
+.hint { font-size: .95rem; color: var(--faint); font-style: italic; }
+.dossier { display: grid; gap: 22px; min-width: 0; padding-top: 4px; }
+.dossier h3 { font-weight: 400; font-size: clamp(2.2rem, 3.6vw, 2.9rem); letter-spacing: -.02em; line-height: 1.02; }
+.dossier .tagline { font-style: italic; color: var(--ice); font-size: 1.25rem; line-height: 1.35; margin-top: -10px; }
+.dossier p.body { font-weight: 400; color: var(--text-2); font-size: 1.08rem; line-height: 1.62; max-width: 60ch; }
+.measure { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 1.02rem; }
+.measure caption { text-align: left; padding-bottom: 6px; }
+.measure th, .measure td { padding: 7px 0; border-bottom: 1px solid var(--line); text-align: right; font-weight: 400; }
+.measure th:first-child, .measure td:first-child { text-align: left; color: var(--text-3); }
+.measure thead th { color: var(--muted); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+.measure td.w { color: var(--text); }
+.source { font-size: .92rem; color: var(--faint); line-height: 1.5; }
+
+/* ---------------------------------------------------------------- Small things */
+.sizes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(10px, 1.6vw, 22px); }
+.sizes figure { display: grid; gap: 10px; min-width: 0; }
+.sizes img { width: 100%; height: auto; aspect-ratio: 1; display: block; border-radius: 3px; background: #000; }
+.sizes figcaption { display: grid; gap: 0; }
+.sizes figcaption b { font-size: 1.6rem; font-weight: 400; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.sizes figcaption span { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sizes-scale { display: flex; align-items: center; gap: 12px; margin: 14px 0 44px; font-size: .92rem; color: var(--faint); line-height: 1.4; }
+.sizes-scale i { flex: none; width: calc((100% - 3 * clamp(10px, 1.6vw, 22px)) / 4 / 3); max-width: 33%; height: 6px; border: 1px solid var(--muted); border-top: 0; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 clamp(20px, 4vw, 56px); border-top: 1px solid var(--line); }
+.tile { padding: 22px 0 24px; border-bottom: 1px solid var(--line); display: grid; gap: 4px; align-content: start; }
+.tile .big { font-size: 3rem; font-weight: 400; line-height: 1; color: var(--ice); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.tile .big small { font-size: 1.1rem; color: var(--muted); margin-left: 6px; letter-spacing: 0; }
+.tile .what { font-size: 1.08rem; color: var(--text-2); line-height: 1.4; }
+.tile .src { font-size: .88rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+.t1 { display: grid; min-width: 0; }
+.t1 h3 { font-weight: 400; font-size: 1.6rem; line-height: 1.2; }
+.t1 .cap { font-size: .95rem; color: var(--faint); line-height: 1.45; margin: 2px 0 14px; }
+.tiles.stack { grid-template-columns: minmax(0, 1fr); }
+.tiles.stack .tile { grid-template-columns: 7.2rem minmax(0, 1fr); column-gap: 18px; padding: 16px 0 18px; }
+.tiles.stack .big { grid-row: span 2; font-size: 2.4rem; }
+.tiles.stack .big small { display: block; margin: 4px 0 0; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; }
+
+/* ---------------------------------------------------------------- Neurodegeneration */
+.neuro-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px clamp(28px, 5vw, 72px); align-items: start; }
+
+/* ---------------------------------------------------------------- Use cases */
+.cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(28px, 5vw, 72px); border-top: 1px solid var(--line); }
+.case { padding: 28px 0 32px; border-bottom: 1px solid var(--line); display: grid; gap: 10px; align-content: start; }
+.case img { width: 100%; height: auto; aspect-ratio: 720 / 453; object-fit: cover; display: block; border-radius: 3px; background: #000; margin-bottom: 8px; }
+.case .label { color: var(--accent); }
+.case h3 { font-weight: 400; font-size: 1.85rem; line-height: 1.15; letter-spacing: -.01em; }
+.case p { font-weight: 400; color: var(--text-2); font-size: 1.08rem; line-height: 1.6; max-width: 54ch; }
+
+/* ---------------------------------------------------------------- Performance */
+.perf { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px clamp(28px, 5vw, 72px); }
+.perf-col { display: grid; align-content: start; min-width: 0; }
+.perf-col h3 { font-weight: 400; font-size: 1.6rem; line-height: 1.2; }
+.perf-col .cap { font-size: .95rem; color: var(--faint); line-height: 1.45; margin: 2px 0 12px; }
+.perf-list { display: grid; border-top: 1px solid var(--line); }
+.perf-list div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.perf-list dt { font-size: 1.1rem; color: var(--text-2); line-height: 1.3; }
+.perf-list dt small { display: block; font-size: .86rem; color: var(--faint); margin-top: 2px; }
+.perf-list dd { text-align: right; font-size: 2rem; font-weight: 400; line-height: 1; color: var(--ice); font-variant-numeric: tabular-nums; }
+.all-results { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 20px; }
+.all-results summary { cursor: pointer; font-size: 1.15rem; color: var(--text); list-style: none; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; }
+.all-results summary::-webkit-details-marker { display: none; }
+.all-results summary::before { content: '+'; color: var(--accent); font-size: 1.4rem; width: 1em; }
+.all-results[open] summary::before { content: '\2013'; }
+.all-results .cap { font-size: .95rem; color: var(--faint); margin: 4px 0 20px; max-width: 70ch; }
+.all-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px clamp(28px, 5vw, 72px); }
+.all-grid h4 { font-weight: 500; font-size: .9rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.all-grid dl > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.all-grid dt { font-size: 1rem; color: var(--text-2); line-height: 1.3; }
+.all-grid dt small { display: block; font-size: .82rem; color: var(--faint); }
+.all-grid dd { text-align: right; font-size: 1.15rem; font-variant-numeric: tabular-nums; color: var(--text); line-height: 1.2; }
+.all-grid dd small { display: block; font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+.all-grid dd .note-inline { text-transform: none; letter-spacing: 0; font-size: .78rem; }
+.perf-list dd small { display: block; font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin-top: 6px; max-width: 12em; margin-left: auto; line-height: 1.3; }
+
+/* ---------------------------------------------------------------- Built on + CTA */
+.specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0 clamp(20px, 4vw, 56px); border-top: 1px solid var(--line); }
+.specs div { padding: 20px 0; border-bottom: 1px solid var(--line); display: grid; gap: 2px; align-content: start; }
+.specs dt { color: var(--muted); font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; }
+.specs dd { font-size: 1.6rem; font-weight: 400; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.specs dd small { display: block; font-size: .95rem; color: var(--faint); margin-top: 4px; line-height: 1.4; }
+.closing { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 28px clamp(28px, 5vw, 72px); align-items: end; }
+.closing .copy { display: grid; gap: 18px; }
+.closing p { font-weight: 400; font-size: 1.15rem; color: var(--text-2); line-height: 1.62; max-width: 56ch; }
+.motto { color: var(--muted); font-size: 1rem; line-height: 1.4; }
+footer.site { padding: 40px var(--gutter) calc(48px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); }
+footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px 32px; align-items: baseline; }
+footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-width: 70ch; }
+
+@media (max-width: 900px) {
+  .probe-grid, .neuro-grid, .closing, .cases { grid-template-columns: minmax(0, 1fr); }
+  .sizes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .perf, .all-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero { min-height: 0; padding-top: 104px; padding-bottom: 64px; align-items: flex-start; }
+  .hero::after { background: linear-gradient(180deg, rgba(9,13,17,.15) 0%, rgba(9,13,17,.6) 34%, rgba(9,13,17,.93) 58%, var(--bg) 100%); }
+  .hero-main { padding-top: calc(70vw - 40px); }
+  section.band { padding-block: 72px; }
+  .tabs { gap: 2px 20px; }
+  .tab { font-size: 1.05rem; }
+}
+@media (max-width: 520px) {
+  nav.site { gap: 22px; }
+  .tag.tr { display: none; }
+  .seg button { padding: 2px 12px; }
+  .perf-list dd { font-size: 1.6rem; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<nav class="site" aria-label="Site">
+  <a href="https://mihirneal.com/">Home</a>
+  <a href="https://mihirneal.com/research.html" class="active" aria-current="page">Research</a>
+  <a href="https://mihirneal.com/code.html">Code</a>
+  <a href="https://mihirneal.com/writing.html">Writing</a>
+  <a href="https://mihirneal.com/misc.html">Misc</a>
+</nav>
+
+<header class="hero">
+  <canvas id="heroScan" aria-hidden="true"></canvas>
+  <div class="hero-main">
+    <p class="label">Foundation model for brain MRI</p>
+    <h1>Walnut</h1>
+    <hr class="divider" aria-hidden="true">
+    <p class="focus">Reads every brain MRI. Flags what matters.</p>
+    <p class="bio">Walnut is a foundation model trained on 250,000 brain scans. It outlines tumors, strokes, MS plaques and microbleeds down to a few millimeters, and tracks the slow tissue loss of Alzheimer's disease from one scan to the next.</p>
+    <div class="cta">
+      <a class="button" href="#probe">See it work</a>
+      <a class="text-link" href="#performance">Performance</a>
+    </div>
+    <div class="hero-stats">
+      <div><b>250K</b><span>Training scans</span></div>
+      <div><b>43</b><span>Tasks evaluated</span></div>
+      <div><b>20+</b><span>Datasets</span></div>
+    </div>
+  </div>
+  <p class="scan-credit">A healthy 36-year-old brain, T1-weighted</p>
+</header>
+
+<main>
+  <!-- ======================================================= Probe -->
+  <section class="band" id="probe" aria-labelledby="probe-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="label">See it work</p>
+        <h2 id="probe-title">See what <em>it sees.</em></h2>
+        <p class="lede">Fifteen real patients, three for each finding. Everything in amber is what Walnut found on its own. Scroll over the scan or drag the rail to move through the slices, and switch to Compare to put the expert's outline beside it.</p>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Finding" id="tabs"></div>
+      <div class="probe-grid">
+        <div class="viewer">
+          <div class="controls">
+            <div class="seg" role="group" aria-label="Patient" id="patientSeg"></div>
+            <div class="seg" role="group" aria-label="Sequence" id="contrastSeg"></div>
+            <div class="seg" role="group" aria-label="View" id="modeSeg">
+              <button type="button" id="mode-walnut" data-mode="walnut" aria-pressed="true">Walnut</button>
+              <button type="button" id="mode-scan" data-mode="scan" aria-pressed="false">Scan only</button>
+              <button type="button" id="mode-compare" data-mode="compare" aria-pressed="false">Compare</button>
+            </div>
+          </div>
+          <div class="stage" id="stage" tabindex="0" aria-label="MRI viewer. Arrow keys change the slice.">
+            <canvas id="scan"></canvas>
+            <div class="loading" id="loading">Loading scan&hellip;</div>
+            <div class="tag tl"><b id="tagSeq">T1c</b>Axial</div>
+            <div class="tag tr" id="tagCase"></div>
+            <div class="tag side r" aria-hidden="true">R</div>
+            <div class="tag side l" aria-hidden="true">L</div>
+            <div class="tag br" id="tagSlice"></div>
+            <div class="rail"><input type="range" id="depth" min="0" max="10" value="5" aria-label="Slice"></div>
+          </div>
+          <div class="readout" aria-live="polite"><span class="label">Under the cursor</span><span id="readout" class="legend"></span></div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <article class="dossier" id="dossier" aria-live="polite"></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= Small things -->
+  <section class="band" id="small" aria-labelledby="small-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="label">Precision</p>
+        <h2 id="small-title">The small things <em>are the hard part.</em></h2>
+        <p class="lede">A big tumor is easy to see. The findings that change care are often a few millimeters wide: a bleed the size of a grain of rice, a new plaque, a metastasis that hasn't grown yet. Walnut is built to catch them.</p>
+      </div>
+      <div class="sizes">
+        <figure><img src="walnut-assets/size_0.jpg" width="360" height="360" alt="A 3.5 mm microbleed on T2*, outlined by Walnut"><figcaption><b>3.5 mm</b><span>Microbleed &middot; T2*</span></figcaption></figure>
+        <figure><img src="walnut-assets/size_1.jpg" width="360" height="360" alt="A 5.4 mm MS plaque on FLAIR, outlined by Walnut"><figcaption><b>5.4 mm</b><span>MS plaque &middot; FLAIR</span></figcaption></figure>
+        <figure><img src="walnut-assets/size_2.jpg" width="360" height="360" alt="A 10 mm brain metastasis on contrast T1, outlined by Walnut"><figcaption><b>10 mm</b><span>Metastasis &middot; T1c</span></figcaption></figure>
+        <figure><img src="walnut-assets/size_3.jpg" width="360" height="360" alt="A 22 mm glioma enhancing rim on contrast T1, outlined by Walnut"><figcaption><b>22 mm</b><span>Glioma &middot; T1c</span></figcaption></figure>
+      </div>
+      <div class="sizes-scale"><i aria-hidden="true"></i><span>10 mm. Real patients, all at the same scale; each square is 30 mm across. The amber outline is Walnut's.</span></div>
+      <div class="tiles">
+        <div class="tile"><span class="big">94%</span><span class="what">of MS plaques 4 to 10 mm across, found</span><span class="src">5,044 plaques &middot; 200 patients</span></div>
+        <div class="tile"><span class="big">0.66<small>Dice</small></span><span class="what">on metastases when a patient's total is under 1 mL, 0.81 from 1 to 5 mL</span><span class="src">UCSF-BMSR &middot; 199 patients</span></div>
+        <div class="tile"><span class="big">0.75<small>Dice</small></span><span class="what">on vestibular schwannomas smaller than 1 mL, 0.91 from 1 to 5 mL</span><span class="src">crossMoDA &middot; 395 patients</span></div>
+        <div class="tile"><span class="big">0.89<small>r</small></span><span class="what">agreement with the expert's microbleed count, per patient</span><span class="src">ADNI, AIBL, VALDO &middot; 300 patients</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= Neurodegeneration -->
+  <section class="band" id="neuro" aria-labelledby="neuro-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="label">Neurodegeneration</p>
+        <h2 id="neuro-title">It watches the brain <em>change.</em></h2>
+        <p class="lede">Alzheimer's starts years before symptoms, as a slow loss of tissue in the hippocampus. From one routine MRI, Walnut measures those structures, reads the disease underneath, and predicts where a patient is headed.</p>
+      </div>
+      <div class="neuro-grid">
+        <div class="t1">
+          <h3>Who declines, and how fast</h3>
+          <p class="cap">Clinical data here means age, sex, education, APOE genotype, diagnosis and baseline cognitive scores, plus a p-tau217 blood test in A4. Adding Walnut's read of one scan predicts each person's future far better.</p>
+          <div class="tiles stack">
+            <div class="tile"><span class="big">2.1&times;<small>more explained</small></span><span class="what">of each person's future cognitive decline on the ADAS-13 test</span><span class="src">ADNI &middot; 454 people &middot; R&sup2; 0.11 with clinical data alone, 0.24 with Walnut</span></div>
+            <div class="tile"><span class="big">+42%<small>more explained</small></span><span class="what">of how fast each person's hippocampus will shrink, years before symptoms</span><span class="src">A4, preclinical Alzheimer's &middot; 398 people &middot; R&sup2; 0.20 to 0.28</span></div>
+            <div class="tile"><span class="big">+37%<small>more explained</small></span><span class="what">of how fast dementia will worsen (CDR-SB)</span><span class="src">ADNI &middot; 512 people &middot; R&sup2; 0.24 to 0.33</span></div>
+            <div class="tile"><span class="big">+30%<small>more explained</small></span><span class="what">of cognitive decline in people who are still cognitively normal</span><span class="src">A4 &middot; 666 people &middot; R&sup2; 0.28 to 0.36</span></div>
+          </div>
+        </div>
+        <div class="t1">
+          <h3>From a T1 alone</h3>
+          <p class="cap">A routine structural scan, with no PET and no clinical data.</p>
+          <div class="tiles stack">
+            <div class="tile"><span class="big">0.81<small>AUROC</small></span><span class="what">which people with mild cognitive impairment develop dementia within 3 years</span><span class="src">ADNI &middot; 500 &middot; 0.82 on NACC</span></div>
+            <div class="tile"><span class="big">0.56<small>R&sup2;</small></span><span class="what">tau PET burden, read from a structural MRI</span><span class="src">ADNI &middot; 500 &middot; 0.60 on NACC</span></div>
+            <div class="tile"><span class="big">0.79<small>AUROC</small></span><span class="what">normal, mild cognitive impairment or Alzheimer's dementia, from one scan</span><span class="src">ADNI &middot; 500 &middot; 0.77 on NACC</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= Use cases -->
+  <section class="band" id="uses" aria-labelledby="uses-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="label">Why it exists</p>
+        <h2 id="uses-title">An eye inside <em>every scan.</em></h2>
+        <p class="lede">Most brain MRIs are read once, by one person, in a few minutes. Walnut is built to look at every voxel of every scan, every time, and to give the people and machines that act on it a precise map of what's there.</p>
+      </div>
+      <div class="cases">
+        <div class="case"><img src="walnut-assets/still_surgery.jpg" width="720" height="453" alt="Walnut's outline of a glioma's tumor, edema and enhancing core on FLAIR" loading="lazy"><span class="label">Surgical robotics</span><h3>Know what to cut and what to spare.</h3><p>A surgical robot has to know what it's looking at. Walnut labels tumor, edema, infarct and healthy anatomy voxel by voxel, so an autonomous system can tell the tissue it should remove from the tissue it must protect.</p></div>
+        <div class="case"><img src="walnut-assets/still_screening.jpg" width="720" height="453" alt="Three small brain metastases, 4 to 9 mm across, each outlined by Walnut on a contrast T1 scan" loading="lazy"><span class="label">Screening</span><h3>Run on every MRI, before anyone reads it.</h3><p>Walnut can run the moment a scan is acquired. It flags tumors, bleeds, strokes and plaques before a radiologist opens the study, so the urgent cases move to the top of the list and the small ones don't slip through.</p></div>
+        <div class="case"><img src="walnut-assets/still_alzheimers.jpg" width="720" height="453" alt="Coronal T1 of an amyloid-positive older adult with no symptoms, both hippocampi outlined by Walnut" loading="lazy"><span class="label">Alzheimer's disease</span><h3>Prognosis and treatment choice.</h3><p>Walnut predicts who will decline and how fast, and reads tau burden from a routine T1. Before anti-amyloid treatment, it also counts the microbleeds that decide who can safely start the drugs.</p></div>
+        <div class="case"><img src="walnut-assets/still_tumors.jpg" width="720" height="453" alt="Walnut's outline of a brain metastasis and its edema on contrast T1" loading="lazy"><span class="label">Brain tumors</span><h3>Treatment and follow-up.</h3><p>Walnut measures every tumor compartment, reads IDH mutation status from imaging, and calls whether a glioma grew, shrank or held between scans, so treatment decisions rest on consistent numbers.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= Performance -->
+  <section class="band" id="performance" aria-labelledby="perf-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="label">Performance</p>
+        <h2 id="perf-title">Measured on patients <em>it never saw.</em></h2>
+        <p class="lede">Every number is Walnut on held-out patients from public datasets, checked against expert outlines, PET scans or clinical follow-up. The full list of all 43 tasks, including where Walnut still struggles, is at the bottom.</p>
+      </div>
+      <div class="perf">
+        <div class="perf-col"><h3>What it finds</h3><p class="cap">Overlap with expert outlines, where 1.0 is a perfect match (Dice).</p><dl class="perf-list">
+          <div><dt>Outlines gliomas, tumor and edema<small>BraTS 2021 &middot; 500 patients</small></dt><dd>0.92<small>overlap with expert</small></dd></div>
+          <div><dt>Finds a glioma's actively growing edge<small>BraTS 2021 &middot; 500 patients</small></dt><dd>0.82<small>overlap with expert</small></dd></div>
+          <div><dt>Outlines vestibular schwannomas<small>crossMoDA &middot; 395 patients</small></dt><dd>0.83<small>overlap with expert</small></dd></div>
+          <div><dt>Outlines brain metastases<small>UCSF-BMSR &middot; 199 patients</small></dt><dd>0.78<small>overlap with expert</small></dd></div>
+          <div><dt>Outlines acute strokes<small>SOOP &middot; 500 patients</small></dt><dd>0.74<small>overlap with expert</small></dd></div>
+          <div><dt>Outlines MS plaques<small>3 cohorts &middot; 200 patients</small></dt><dd>0.69<small>overlap with expert</small></dd></div>
+        </dl></div>
+        <div class="perf-col"><h3>What it predicts</h3><p class="cap">One answer per patient, from the scan. AUROC: 1.0 is perfect, 0.5 is a coin flip.</p><dl class="perf-list">
+          <div><dt>Calls whether a glioma grew, shrank or held<small>UCSF &middot; 297 scan pairs</small></dt><dd>0.91<small>AUROC</small></dd></div>
+          <div><dt>Tells IDH-mutant gliomas from wild-type<small>UCSF-PDGM &middot; 248 patients</small></dt><dd>0.90<small>AUROC</small></dd></div>
+          <div><dt>Flags patients likely to do poorly after a stroke<small>SOOP &middot; 368 patients</small></dt><dd>0.82<small>AUROC</small></dd></div>
+          <div><dt>Reads white-matter disease from a T1<small>ADNI &middot; 500 patients</small></dt><dd>0.92<small>correlation with FLAIR measure</small></dd></div>
+          <div><dt>Estimates brain age<small>IXI &middot; 281 people</small></dt><dd>2.8<small>years average error</small></dd></div>
+        </dl></div>
+      </div>
+      <details class="all-results" id="all-results"><summary>See all 43 results</summary>
+<p class="cap">The full list, including where Walnut still struggles: psychiatric diagnoses from structural MRI are close to chance. Every number is measured on patients the scoring model never trained on; the notes mark the exceptions we know of.</p>
+<div class="all-grid">
+<div><h4>Lesions</h4><dl>
+<div><dt>Glioma, tumor and edema<small>BraTS 2021 &middot; 500</small></dt><dd>0.92<small>Dice</small></dd></div>
+<div><dt>Glioma, enhancing tumor<small>BraTS 2021 &middot; 500</small></dt><dd>0.82<small>Dice</small></dd></div>
+<div><dt>Brain metastases, enhancing tumor<small>UCSF-BMSR &middot; 199</small></dt><dd>0.78<small>Dice</small></dd></div>
+<div><dt>Edema around metastases, FLAIR<small>UCSF-BMSR &middot; 198</small></dt><dd>0.59<small>Dice</small></dd></div>
+<div><dt>Edema around metastases, contrast T1<small>UCSF-BMSR &middot; 198</small></dt><dd>0.51<small>Dice</small></dd></div>
+<div><dt>Vestibular schwannoma<small>crossMoDA &middot; 395</small></dt><dd>0.83<small>Dice</small></dd></div>
+<div><dt>Ischemic stroke, DWI<small>SOOP &middot; 500</small></dt><dd>0.74<small>Dice</small></dd></div>
+<div><dt>Ischemic stroke, DWI<small>ISLES 2022 and SOOP &middot; 495</small></dt><dd>0.71<small>Dice</small><small class="note-inline">base model: post-training used ISLES 2022</small></dd></div>
+<div><dt>Multiple sclerosis plaques<small>Ljubljana, MS3SEG, MSLesSeg &middot; 200</small></dt><dd>0.69<small>Dice</small></dd></div>
+<div><dt>Cerebral microbleeds<small>ADNI, AIBL, VALDO &middot; 300</small></dt><dd>0.20<small>Dice</small></dd></div>
+</dl></div>
+<div><h4>Tumors and treatment</h4><dl>
+<div><dt>IDH mutation in glioma<small>UCSF-PDGM &middot; 248</small></dt><dd>0.90<small>AUROC</small></dd></div>
+<div><dt>Glioblastoma survival past 1 year<small>UPenn-GBM</small></dt><dd>0.70<small>AUROC</small></dd></div>
+<div><dt>Glioma enhancing tumor grew, shrank or held<small>UCSF &middot; 297 pairs</small></dt><dd>0.91<small>AUROC</small></dd></div>
+<div><dt>Glioma edema grew, shrank or held<small>UCSF &middot; 297 pairs</small></dt><dd>0.90<small>AUROC</small></dd></div>
+<div><dt>Schwannoma grew, shrank or held<small>UCSF &middot; 309 pairs</small></dt><dd>0.42<small>AUROC</small></dd></div>
+<div><dt>Glioma progression, contrast T1<small>UCSF &middot; 169</small></dt><dd>0.75<small>AUROC</small></dd></div>
+<div><dt>Glioma progression, FLAIR<small>UCSF &middot; 169</small></dt><dd>0.69<small>AUROC</small></dd></div>
+</dl></div>
+<div><h4>Neurodegeneration and Alzheimer's</h4><dl>
+<div><dt>Normal, MCI or Alzheimer's dementia<small>ADNI &middot; 500</small></dt><dd>0.79<small>AUROC</small></dd></div>
+<div><dt>Normal, MCI or dementia<small>NACC &middot; 500</small></dt><dd>0.77<small>AUROC</small><small class="note-inline">NACC may share people with the OASIS-3 data this model trained on; unchecked</small></dd></div>
+<div><dt>MCI to dementia, time to event<small>ADNI &middot; 500</small></dt><dd>0.77<small>C-index</small></dd></div>
+<div><dt>MCI to dementia, time to event<small>NACC &middot; 500</small></dt><dd>0.78<small>C-index</small><small class="note-inline">NACC may share people with the OASIS-3 data this model trained on; unchecked</small></dd></div>
+<div><dt>Cognitively normal to impaired, time to event<small>ADNI &middot; 467</small></dt><dd>0.63<small>C-index</small></dd></div>
+<div><dt>Tau PET burden from a T1<small>ADNI &middot; 500</small></dt><dd>0.56<small>R&sup2;</small></dd></div>
+<div><dt>Tau PET burden from a T1<small>NACC &middot; 500</small></dt><dd>0.60<small>R&sup2;</small><small class="note-inline">NACC may share people with the OASIS-3 data this model trained on; unchecked</small></dd></div>
+<div><dt>Tau PET burden from a T1<small>A4 &middot; 278</small></dt><dd>0.11<small>R&sup2;</small></dd></div>
+<div><dt>Amyloid PET burden from a T1<small>ADNI &middot; 500</small></dt><dd>0.24<small>R&sup2;</small></dd></div>
+<div><dt>Amyloid PET burden from a T1<small>NACC &middot; 341</small></dt><dd>0.18<small>R&sup2;</small><small class="note-inline">NACC may share people with the OASIS-3 data this model trained on; unchecked</small></dd></div>
+<div><dt>Future cognitive decline (PACC)<small>A4 &middot; 666</small></dt><dd>0.36<small>R&sup2;</small><small class="note-inline">clinical data alone 0.28</small></dd></div>
+<div><dt>Progression to impairment (CDR)<small>A4 &middot; 602</small></dt><dd>0.78<small>AUROC</small><small class="note-inline">clinical data alone 0.78</small></dd></div>
+<div><dt>Future cognitive decline (ADAS-13)<small>ADNI &middot; 454</small></dt><dd>0.24<small>R&sup2;</small><small class="note-inline">clinical data alone 0.11</small></dd></div>
+<div><dt>Future dementia severity (CDR-SB)<small>ADNI &middot; 512</small></dt><dd>0.33<small>R&sup2;</small><small class="note-inline">clinical data alone 0.24</small></dd></div>
+<div><dt>Future hippocampal shrinkage rate<small>A4 &middot; 398</small></dt><dd>0.28<small>R&sup2;</small><small class="note-inline">clinical data alone 0.20</small></dd></div>
+<div><dt>Future ventricle expansion rate<small>A4 &middot; 398</small></dt><dd>0.14<small>R&sup2;</small><small class="note-inline">clinical data alone 0.14</small></dd></div>
+<div><dt>Future tau accumulation rate<small>A4 &middot; 230</small></dt><dd>0.23<small>R&sup2;</small><small class="note-inline">clinical data alone 0.24</small></dd></div>
+<div><dt>Future tau accumulation rate<small>ADNI &middot; 294</small></dt><dd>0.20<small>R&sup2;</small><small class="note-inline">clinical data alone 0.22</small></dd></div>
+<div><dt>White-matter disease burden from a T1<small>ADNI &middot; 500</small></dt><dd>0.92<small>r</small></dd></div>
+<div><dt>White-matter disease burden from FLAIR<small>ADNI &middot; 500</small></dt><dd>0.94<small>r</small></dd></div>
+</dl></div>
+<div><h4>Whole brain</h4><dl>
+<div><dt>Brain age, average error<small>IXI &middot; 281</small></dt><dd>2.8<small>years</small></dd></div>
+<div><dt>Brain age, average error<small>OpenBHB &middot; 500</small></dt><dd>1.9<small>years</small><small class="note-inline">about a quarter of these scans were in pretraining</small></dd></div>
+<div><dt>Poor outcome after stroke<small>SOOP &middot; 368</small></dt><dd>0.82<small>AUROC</small></dd></div>
+<div><dt>Psychiatric diagnosis<small>CNP</small></dt><dd>0.66<small>AUROC</small><small class="note-inline">these scans were in pretraining, without labels</small></dd></div>
+<div><dt>Autism<small>ABIDE</small></dt><dd>0.57<small>AUROC</small></dd></div>
+<div><dt>ADHD<small>ADHD-200</small></dt><dd>0.49<small>AUROC</small></dd></div>
+</dl></div>
+</div></details>
+    </div>
+  </section>
+
+  <!-- ======================================================= Built on -->
+  <section class="band" id="built" aria-labelledby="built-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="label">Built on</p>
+        <h2 id="built-title">A quarter of a million <em>brains.</em></h2>
+        <p class="lede">Walnut learned from public research MRI collected on many scanners, at many hospitals, from healthy volunteers and patients, then sharpened on expert-outlined lesions.</p>
+      </div>
+      <dl class="specs">
+        <div><dt>Training data</dt><dd>253,418 scans<small>FOMO-300K: T1, T2, FLAIR, diffusion and more</small></dd></div>
+        <div><dt>Compute</dt><dd>8 &times; H100<small>15 hours of pretraining, 1.6 &times; 10&sup2;&#8304; FLOPs</small></dd></div>
+        <div><dt>Input</dt><dd>Structural MRI<small>T1, contrast T1, T2, FLAIR, DWI, T2*</small></dd></div>
+        <div><dt>Evaluated on</dt><dd>43 tasks<small>20+ datasets, scored on held-out patients</small></dd></div>
+      </dl>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p>Walnut is a research model. It is not a medical device and is not for clinical use.<br>Scans: HCP-Aging, BraTS 2021, UCSF-BMSR, Ljubljana MS, ADNI and SOOP.</p>
+    <p class="motto"><em>Per aspera ad astra.</em></p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+  const ASSETS = 'walnut-assets/';
+  const BG = '#000', PAGE = '#090d11';
+  const RGB = { a: [233, 168, 79], b: [239, 106, 85], x: [169, 212, 239] };
+  const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  const fmt = (v, d = 1) => Number(v).toFixed(d);
+  const FONT = "'EB Garamond', Georgia, serif";
+
+  // ------------------------------------------------------------ copy per finding
+  const COPY = {
+    glioma: {
+      name: 'Glioma', short: 'Glioma',
+      tagline: "A tumor grown from the brain's own support cells.",
+      body: ['Gliomas grow into the brain instead of pushing it aside. On FLAIR the tumor and the swelling around it glow white; after contrast, the actively growing edge lights up around a dark, dying core. Surgeons and radiation oncologists need both outlines, slice by slice.'],
+      layers: { a: 'Tumor and edema', b: 'Enhancing tumor' },
+      source: 'BraTS 2021', sourceLong: "BraTS 2021. The amber and coral maps are Walnut's own predictions, made without ever training on this patient."
+    },
+    metastases: {
+      name: 'Brain metastases', short: 'Metastases',
+      tagline: 'Cancer that has spread to the brain from somewhere else.',
+      body: ['Metastases come in numbers. A lung or breast cancer can seed several at once, each a bright nodule on contrast T1 with a cuff of edema on FLAIR. Counting and measuring every one decides between targeted radiosurgery and treating the whole brain.'],
+      layers: { a: 'Edema', b: 'Enhancing tumor' },
+      source: 'UCSF-BMSR', sourceLong: "UCSF-BMSR. The amber and coral maps are Walnut's own predictions, made without ever training on this patient."
+    },
+    ms: {
+      name: 'Multiple sclerosis', short: 'MS',
+      tagline: 'The immune system strips the insulation from nerve fibers.',
+      body: ['MS leaves plaques of damaged white matter that show up bright on FLAIR, around the ventricles, under the cortex and in the brainstem. New or growing plaques tell a neurologist whether a treatment is working, so every plaque counts.'],
+      layers: { a: 'MS plaques' },
+      source: 'Ljubljana MS', sourceLong: "3D FLAIR at 3 T, Ljubljana MS. The amber map is Walnut's own prediction, made without ever training on this patient."
+    },
+    microbleeds: {
+      name: 'Cerebral microbleeds', short: 'Microbleeds',
+      tagline: 'Pinpoint traces of old bleeding, a few millimeters across.',
+      body: ["Iron left by tiny bleeds turns black on T2* and SWI. Bleeds near the cortex point to amyloid angiopathy, deep ones to high blood pressure, and the count decides who can safely take the new anti-amyloid Alzheimer's drugs."],
+      layers: { a: 'Microbleeds' },
+      source: 'ADNI T2*', sourceLong: "ADNI T2*, 4 mm slices. The amber rings are the bleeds Walnut found; Compare adds the expert's in blue."
+    },
+    stroke: {
+      name: 'Ischemic stroke', short: 'Stroke',
+      tagline: 'A blocked artery starves part of the brain of blood.',
+      body: ['Within minutes of a blockage, water stops moving freely in the starving tissue: bright on DWI, dark on the ADC map. Infarct size drives the decision to pull out the clot and the outlook afterwards.'],
+      layers: { a: 'Infarct' },
+      source: 'SOOP', sourceLong: "SOOP. The amber map is Walnut's own prediction, made without ever training on this patient."
+    }
+  };
+
+  // ------------------------------------------------------------ geometry helpers
+  function contour(mask, w, h) {
+    const out = [];
+    const v = (x, y) => (x >= 0 && y >= 0 && x < w && y < h) ? mask[y * w + x] : 0;
+    for (let y = -1; y < h; y++) for (let x = -1; x < w; x++) {
+      const idx = (v(x, y) << 3) | (v(x + 1, y) << 2) | (v(x + 1, y + 1) << 1) | v(x, y + 1);
+      if (idx === 0 || idx === 15) continue;
+      const T = [x + 1, y + .5], R = [x + 1.5, y + 1], B = [x + 1, y + 1.5], L = [x + .5, y + 1];
+      const seg = (p, q) => out.push(p[0], p[1], q[0], q[1]);
+      switch (idx) {
+        case 1: case 14: seg(L, B); break;
+        case 2: case 13: seg(B, R); break;
+        case 3: case 12: seg(L, R); break;
+        case 4: case 11: seg(T, R); break;
+        case 5: seg(T, R); seg(L, B); break;
+        case 6: case 9: seg(T, B); break;
+        case 7: case 8: seg(L, T); break;
+        case 10: seg(L, T); seg(B, R); break;
+      }
+    }
+    return out;
+  }
+  function polylines(segs) {
+    // join marching-squares segments into chains, then round them off (Chaikin, two passes)
+    const n = segs.length / 4; if (!n) return [];
+    const K = (x, y) => Math.round(x * 2) * 8192 + Math.round(y * 2);
+    const adj = new Map();
+    const add = (k, i) => { const a = adj.get(k); if (a) a.push(i); else adj.set(k, [i]); };
+    for (let i = 0; i < n; i++) { add(K(segs[4 * i], segs[4 * i + 1]), i); add(K(segs[4 * i + 2], segs[4 * i + 3]), i); }
+    const used = new Uint8Array(n), out = [];
+    const other = (i, k) => K(segs[4 * i], segs[4 * i + 1]) === k ? [segs[4 * i + 2], segs[4 * i + 3]] : [segs[4 * i], segs[4 * i + 1]];
+    for (let i = 0; i < n; i++) {
+      if (used[i]) continue; used[i] = 1;
+      const fwd = [[segs[4 * i + 2], segs[4 * i + 3]]], back = [[segs[4 * i], segs[4 * i + 1]]];
+      for (const arr of [fwd, back]) for (;;) {
+        const end = arr[arr.length - 1], k = K(end[0], end[1]);
+        let nx = -1; for (const j of adj.get(k)) if (!used[j]) { nx = j; break; }
+        if (nx < 0) break;
+        used[nx] = 1; arr.push(other(nx, k));
+      }
+      let pts = back.reverse().concat(fwd);
+      const f = pts[0], l = pts[pts.length - 1], closed = pts.length > 3 && f[0] === l[0] && f[1] === l[1];
+      if (closed) pts.pop();
+      for (let it = 0; it < 2; it++) {
+        const q = [], m = pts.length, lim = closed ? m : m - 1;
+        if (!closed) q.push(pts[0]);
+        for (let j = 0; j < lim; j++) {
+          const a = pts[j], b = pts[(j + 1) % m];
+          q.push([.75 * a[0] + .25 * b[0], .75 * a[1] + .25 * b[1]], [.25 * a[0] + .75 * b[0], .25 * a[1] + .75 * b[1]]);
+        }
+        if (!closed) q.push(pts[m - 1]);
+        pts = q;
+      }
+      out.push({ pts, closed });
+    }
+    return out;
+  }
+  function components(mask, w) {
+    const lab = new Int32Array(mask.length), out = [], stack = [];
+    for (let i = 0; i < mask.length; i++) {
+      if (!mask[i] || lab[i]) continue;
+      const id = out.length + 1; let n = 0, sx = 0, sy = 0;
+      stack.push(i); lab[i] = id;
+      while (stack.length) {
+        const p = stack.pop(), px = p % w, py = (p - px) / w;
+        n++; sx += px; sy += py;
+        for (const q of [p - 1, p + 1, p - w, p + w]) {
+          if (q < 0 || q >= mask.length || lab[q] || !mask[q]) continue;
+          if ((q === p - 1 && px === 0) || (q === p + 1 && px === w - 1)) continue;
+          lab[q] = id; stack.push(q);
+        }
+      }
+      out.push({ x: sx / n + .5, y: sy / n + .5, n });
+    }
+    return out;
+  }
+
+  // ------------------------------------------------------------ case data
+  const ORDER = ['glioma', 'metastases', 'ms', 'microbleeds', 'stroke'];
+  let FIND = [], HERO = null;
+  const loadImg = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error(src)); i.src = src; });
+  function prepare(c) {
+    if (c._p) return c._p;
+    c._p = (async () => {
+      const names = Object.keys(c.files);
+      const [mask, ...ims] = await Promise.all([loadImg(ASSETS + c.mask), ...names.map(n => loadImg(ASSETS + c.files[n]))]);
+      c._img = {}; names.forEach((n, i) => { c._img[n] = ims[i]; });
+      const cv = document.createElement('canvas'); cv.width = mask.width; cv.height = mask.height;
+      const g = cv.getContext('2d', { willReadFrequently: true }); g.drawImage(mask, 0, 0);
+      const d = g.getImageData(0, 0, cv.width, cv.height).data;
+      const bits = new Uint8Array(cv.width * cv.height);
+      for (let i = 0, j = 0; i < bits.length; i++, j += 4) bits[i] = Math.round(d[j] / 16);
+      c._bits = bits; c._sw = cv.width; c._cache = new Map();
+      c.walnut = c.layers.includes('wa');
+    })();
+    return c._p;
+  }
+  function slice(c, k) {
+    if (c._cache.has(k)) return c._cache.get(k);
+    const { tw, th, cols } = c; const sx = (k % cols) * tw, sy = Math.floor(k / cols) * th;
+    const t = new Uint8Array(tw * th);
+    for (let y = 0; y < th; y++) { const row = (sy + y) * c._sw + sx; t.set(c._bits.subarray(row, row + tw), y * tw); }
+    const pick = bit => { const o = new Uint8Array(tw * th); let any = false; for (let i = 0; i < o.length; i++) if (t[i] & bit) { o[i] = 1; any = true; } return any ? o : null; };
+    const A = pick(c.walnut ? 1 : 4), B = pick(c.walnut ? 2 : 8);
+    const XA = c.walnut ? pick(4) : null, XB = c.walnut ? pick(8) : null;
+    const lines = m => m ? polylines(contour(m, tw, th)) : null;
+    let any = null;
+    if (A || B) { any = new Uint8Array(tw * th); for (let i = 0; i < any.length; i++) any[i] = (A && A[i]) || (B && B[i]) ? 1 : 0; }
+    const comps = any ? components(any, tw) : [];
+    const s = { t, A, B, pA: lines(A), pB: lines(B), pXA: lines(XA), pXB: lines(XB),
+      rings: c.finding === 'microbleeds' ? comps : null, xrings: c.finding === 'microbleeds' && XA ? components(XA, tw) : null };
+    c._cache.set(k, s);
+    return s;
+  }
+  function drawTile(g, c, k, contrast, s, ox, oy) {
+    g.drawImage(c._img[contrast], (k % c.cols) * c.tw, Math.floor(k / c.cols) * c.th, c.tw, c.th, ox, oy, c.tw * s, c.th * s);
+  }
+  function tracePath(g, lines, s, ox, oy) {
+    g.beginPath();
+    for (const { pts, closed } of lines) {
+      g.moveTo(ox + pts[0][0] * s, oy + pts[0][1] * s);
+      for (let i = 1; i < pts.length; i++) g.lineTo(ox + pts[i][0] * s, oy + pts[i][1] * s);
+      if (closed) g.closePath();
+    }
+  }
+  function layer(g, lines, s, ox, oy, col, fillA, lw) {
+    if (!lines || !lines.length) return;
+    tracePath(g, lines, s, ox, oy);
+    if (fillA) { g.fillStyle = rgba(col, fillA); g.fill('evenodd'); }
+    g.strokeStyle = rgba(col, .95); g.lineWidth = lw; g.lineJoin = 'round'; g.lineCap = 'round'; g.stroke();
+  }
+  function rings(g, list, s, ox, oy, col, lw, minR, pad) {
+    if (!list) return;
+    g.strokeStyle = rgba(col, .95); g.lineWidth = lw;
+    for (const r of list) { g.beginPath(); g.arc(ox + r.x * s, oy + r.y * s, Math.max(minR, Math.sqrt(r.n) * s * .9 + pad), 0, Math.PI * 2); g.stroke(); }
+  }
+  function drawOverlay(g, c, sl, s, ox, oy, dpr, expert) {
+    layer(g, sl.pA, s, ox, oy, RGB.a, .22, 1.5 * dpr);
+    layer(g, sl.pB, s, ox, oy, RGB.b, .38, 1.5 * dpr);
+    rings(g, sl.rings, s, ox, oy, RGB.a, 1.4 * dpr, 7 * dpr, 5 * dpr);
+    if (expert) {
+      layer(g, sl.pXA, s, ox, oy, RGB.x, 0, 1.25 * dpr);
+      layer(g, sl.pXB, s, ox, oy, RGB.x, 0, 1.25 * dpr);
+      rings(g, sl.xrings, s, ox, oy, RGB.x, 1.2 * dpr, 11 * dpr, 9 * dpr);
+    }
+  }
+  // ------------------------------------------------------------ probe viewer
+  const $ = id => document.getElementById(id);
+  const stage = $('stage'), cv = $('scan'), ctx = cv.getContext('2d');
+  const st = { fi: 0, pi: 0, k: 0, contrast: null, mode: 'walnut', ptr: null, dirty: true, ready: false, lastMove: 0, wheelAcc: 0 };
+  const cur = () => FIND[st.fi].cases[st.pi];
+  let dpr = 1;
+  function size() { dpr = Math.min(2, window.devicePixelRatio || 1); const r = stage.getBoundingClientRect(); cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); st.dirty = true; }
+  function geom() {
+    const c = cur(), W = cv.width, H = cv.height;
+    const pxPerMM = Math.min(W / 180, H / 216), s = pxPerMM * c.px_mm;
+    return { s, ox: (W - c.tw * s) / 2 - 8 * dpr, oy: (H - c.th * s) / 2, pxPerMM };
+  }
+  function underCursor() {
+    if (!st.ptr) return null;
+    const c = cur(), sl = slice(c, st.k), { s, ox, oy } = geom();
+    const cx = (st.ptr.x - ox) / s, cy = (st.ptr.y - oy) / s, r = 3;
+    let a = false, b = false;
+    const x0 = Math.max(0, Math.floor(cx - r)), x1 = Math.min(c.tw - 1, Math.ceil(cx + r)), y0 = Math.max(0, Math.floor(cy - r)), y1 = Math.min(c.th - 1, Math.ceil(cy + r));
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+      if ((x + .5 - cx) ** 2 + (y + .5 - cy) ** 2 > r * r) continue;
+      const i = y * c.tw + x; if (sl.A && sl.A[i]) a = true; if (sl.B && sl.B[i]) b = true;
+    }
+    return { a, b };
+  }
+  let lastReadout = '';
+  function updateReadout() {
+    const c = cur(), cp = COPY[c.finding], v = underCursor();
+    let html;
+    if (!v) html = '<span class="hint">Point at the scan</span>';
+    else if (!v.a && !v.b) html = '<span class="hint">Nothing flagged here</span>';
+    else html = (v.b ? `<span class="key"><span class="sw b"></span>${cp.layers.b}</span>` : '') + (v.a ? `<span class="key"><span class="sw a"></span>${cp.layers.a}</span>` : '');
+    if (html !== lastReadout) { $('readout').innerHTML = html; lastReadout = html; }
+  }
+  function render() {
+    if (!st.ready) return;
+    const c = cur(), sl = slice(c, st.k), W = cv.width, H = cv.height, { s, ox, oy, pxPerMM } = geom(), g = ctx;
+    g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = BG; g.fillRect(0, 0, W, H);
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+    drawTile(g, c, st.k, st.contrast, s, ox, oy);
+    if (st.mode !== 'scan') drawOverlay(g, c, sl, s, ox, oy, dpr, st.mode === 'compare');
+    updateReadout();
+    const L = 20 * pxPerMM, bx = 16 * dpr, by = H - 18 * dpr;
+    g.strokeStyle = 'rgba(214,220,224,.7)'; g.lineWidth = 1.2 * dpr;
+    g.beginPath(); g.moveTo(bx, by - 4 * dpr); g.lineTo(bx, by); g.lineTo(bx + L, by); g.lineTo(bx + L, by - 4 * dpr); g.stroke();
+    g.font = `400 ${12 * dpr}px ${FONT}`; g.fillStyle = 'rgba(214,220,224,.75)'; g.textAlign = 'left'; g.textBaseline = 'bottom';
+    g.fillText('20 mm', bx + L + 6 * dpr, by + 3 * dpr);
+  }
+  let probeVisible = true, ticking = false;
+  function tick() {
+    if (st.dirty) { st.dirty = false; render(); }
+    ticking = false;
+  }
+  function kick() { st.dirty = true; if (!ticking && probeVisible) { ticking = true; requestAnimationFrame(tick); } }
+  function setSlice(k) {
+    const c = cur(); k = clamp(Math.round(k), 0, c.n - 1);
+    if (k === st.k && st.ready) return;
+    st.k = k; $('depth').value = String(k); $('tagSlice').textContent = `Slice ${k + 1} / ${c.n}`; kick();
+  }
+  function setMode(m) {
+    if (m === 'compare' && !cur().walnut) m = 'walnut';
+    st.mode = m;
+    for (const b of $('modeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.mode === m));
+    buildLegend(); kick();
+  }
+  function setContrast(name) {
+    st.contrast = name;
+    for (const b of $('contrastSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.c === name));
+    $('tagSeq').textContent = name; kick();
+  }
+  function buildLegend() {
+    const c = cur(), cp = COPY[c.finding], who = c.walnut ? 'Walnut' : 'Expert';
+    const items = [`<span class="key"><span class="sw a"></span>${who}: ${cp.layers.a}</span>`];
+    if (cp.layers.b) items.push(`<span class="key"><span class="sw b"></span>${who}: ${cp.layers.b}</span>`);
+    if (c.walnut && st.mode === 'compare') items.push('<span class="key"><span class="sw x"></span>Expert outline</span>');
+    $('legend').innerHTML = items.join('');
+  }
+  function buildDossier() {
+    const c = cur(), cp = COPY[c.finding], S = c.stats, ml = v => fmt(v, v < 1 ? 2 : 1);
+    let table;
+    if (c.walnut) {
+      let rows = [['a', 'wa', 'ea'], ['b', 'wb', 'eb']].filter(([l]) => cp.layers[l]).map(([l, w, e]) =>
+        `<tr><td>${cp.layers[l]}</td><td class="w">${ml(S[w].ml)} mL</td><td>${ml(S[e].ml)} mL</td></tr>`).join('');
+      if (c.finding === 'microbleeds') rows += `<tr><td>Bleeds counted</td><td class="w">${S.wa.n}</td><td>${S.ea.n}</td></tr>`;
+      const dice = [c.dice_a, c.dice_b].filter(v => v != null).map(v => fmt(v, 2)).join(' &middot; ');
+      table = `<table class="measure"><caption class="label">Patient ${st.pi + 1}</caption><thead><tr><th scope="col"></th><th scope="col">Walnut</th><th scope="col">Expert</th></tr></thead><tbody>${rows}<tr><td>Overlap with expert (Dice)</td><td class="w" colspan="2">${dice}</td></tr></tbody></table>`;
+    } else {
+      const rows = [];
+      if (cp.layers.b) rows.push(`<tr><td>${cp.layers.b}</td><td>${ml(S.eb.ml)} mL</td><td>${S.eb.n} lesions</td></tr>`);
+      rows.push(`<tr><td>${cp.layers.a}</td><td>${ml(S.ea.ml)} mL</td><td>${c.count != null ? c.count : S.ea.n}</td></tr>`);
+      table = `<table class="measure"><caption class="label">Patient ${st.pi + 1}, expert annotation</caption><tbody>${rows.join('')}</tbody></table>`;
+    }
+    $('dossier').innerHTML = `<h3>${cp.name}</h3><p class="tagline">${cp.tagline}</p>${cp.body.map(p => `<p class="body">${p}</p>`).join('')}
+      ${table}<p class="source">${c.walnut ? cp.sourceLong : cp.source + '. The colored regions are the expert annotation.'}</p>`;
+  }
+  async function selectCase(fi, pi, focusTab) {
+    st.fi = fi; st.pi = pi; const f = FIND[fi], c = cur();
+    [...$('tabs').children].forEach((t, j) => { t.setAttribute('aria-selected', String(j === fi)); t.tabIndex = j === fi ? 0 : -1; });
+    if (focusTab) $('tabs').children[fi].focus();
+    $('patientSeg').innerHTML = f.cases.map((_, j) => `<button type="button" id="patient-${j + 1}" data-p="${j}" aria-pressed="${j === pi}">${j === 0 ? 'Patient ' : ''}${j + 1}</button>`).join('');
+    st.ready = false; $('loading').hidden = false;
+    await prepare(c);
+    if (st.fi !== fi || st.pi !== pi) return;
+    const names = Object.keys(c.files);
+    if (!names.includes(st.contrast)) st.contrast = names[0];
+    $('contrastSeg').innerHTML = names.map(n => `<button type="button" id="seq-${n.replace(/\W/g, '')}" data-c="${n}" aria-pressed="false">${n}</button>`).join('');
+    $('mode-compare').hidden = !c.walnut;
+    $('depth').max = String(c.n - 1);
+    $('tagCase').textContent = `${COPY[c.finding].source} \u00b7 patient ${pi + 1}`;
+    st.ready = true; $('loading').hidden = true;
+    st.k = -1; setSlice(c.start); setContrast(st.contrast); buildDossier(); setMode(st.mode); kick();
+    f.cases.forEach(o => prepare(o).catch(() => {}));
+  }
+  function buildTabs() {
+    $('tabs').innerHTML = FIND.map((f, i) => `<button type="button" class="tab" role="tab" id="tab-${f.id}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}"><span>${COPY[f.id].short}</span><small>${Object.keys(f.cases[0].files).join(' &middot; ')}</small></button>`).join('');
+    [...$('tabs').children].forEach((t, i) => t.addEventListener('click', () => { st.contrast = null; selectCase(i, 0); }));
+    $('tabs').addEventListener('keydown', e => {
+      const n = FIND.length;
+      if (e.key === 'ArrowRight') { e.preventDefault(); st.contrast = null; selectCase((st.fi + 1) % n, 0, true); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); st.contrast = null; selectCase((st.fi + n - 1) % n, 0, true); }
+    });
+    $('patientSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) selectCase(st.fi, +b.dataset.p); });
+  }
+  const pointer = e => { const r = stage.getBoundingClientRect(); return { x: (e.clientX - r.left) * dpr, y: (e.clientY - r.top) * dpr }; };
+  stage.addEventListener('pointermove', e => {
+    if (e.target.closest('.rail')) { st.ptr = null; kick(); return; }
+    st.ptr = pointer(e); st.lastMove = performance.now(); kick();
+  });
+  stage.addEventListener('pointerdown', e => { if (!e.target.closest('.rail')) { st.ptr = pointer(e); st.lastMove = performance.now(); kick(); } });
+  stage.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { st.ptr = null; kick(); } });
+  stage.addEventListener('wheel', e => {
+    if (!st.ready || performance.now() - st.lastMove > 1500) return; // let a passing page scroll through
+    e.preventDefault(); st.wheelAcc += e.deltaY;
+    while (Math.abs(st.wheelAcc) >= 36) { setSlice(st.k + (st.wheelAcc > 0 ? -1 : 1)); st.wheelAcc -= Math.sign(st.wheelAcc) * 36; }
+  }, { passive: false });
+  stage.addEventListener('keydown', e => {
+    const map = { ArrowUp: 1, ArrowRight: 1, PageUp: 5, ArrowDown: -1, ArrowLeft: -1, PageDown: -5 };
+    if (e.target.id === 'depth' || !(e.key in map)) return;
+    e.preventDefault(); setSlice(st.k + map[e.key]);
+  });
+  $('depth').addEventListener('input', e => setSlice(+e.target.value));
+  $('modeSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setMode(b.dataset.mode); });
+  $('contrastSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setContrast(b.dataset.c); });
+  new ResizeObserver(() => { size(); kick(); }).observe(stage);
+  new IntersectionObserver(es => { probeVisible = es[0].isIntersecting; if (probeVisible) kick(); }).observe(stage);
+
+  // ------------------------------------------------------------ hero: the standard brain, read slice by slice
+  const hcv = $('heroScan'), hg = hcv.getContext('2d');
+  const hero = { img: null, visible: true, last: 0, running: false, dpr: 1, off: null };
+  function heroSize() { const r = hcv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1); hcv.width = Math.round(r.width * d); hcv.height = Math.round(r.height * d); hero.dpr = d; }
+  function heroTile(g, k, s, ox, oy) { const h = HERO; g.drawImage(hero.img, (k % h.cols) * h.tw, Math.floor(k / h.cols) * h.th, h.tw, h.th, ox, oy, h.tw * s, h.th * s); }
+  function heroFrame(ts) {
+    if (!hero.img) return;
+    const h = HERO, W = hcv.width, H = hcv.height, d = hero.dpr, narrow = W / d < 900;
+    const s = narrow ? Math.min(W * .66 / h.tw, H * .45 / h.th) : Math.min(H * .86 / h.th, W * .48 / h.tw);
+    const bw = Math.ceil(h.tw * s), bh = Math.ceil(h.th * s);
+    const ox = narrow ? (W - bw) / 2 : W * .67 - bw / 2, oy = narrow ? 64 * d : (H - bh) / 2 + 10 * d;
+    const t = REDUCED ? 0 : ts / 1000, period = 16;
+    const f = (1 - Math.cos(2 * Math.PI * t / period)) / 2;
+    const k0 = Math.round(h.n * .18), k1 = Math.round(h.n * .82);
+    const kf = REDUCED ? Math.round(h.n * .52) : k0 + f * (k1 - k0), k = Math.min(h.n - 2, Math.floor(kf)), frac = kf - k;
+    if (!hero.off || hero.off.width !== bw || hero.off.height !== bh) { hero.off = document.createElement('canvas'); hero.off.width = bw; hero.off.height = bh; }
+    const og = hero.off.getContext('2d');
+    og.globalCompositeOperation = 'source-over'; og.globalAlpha = 1; og.fillStyle = '#000'; og.fillRect(0, 0, bw, bh);
+    og.imageSmoothingEnabled = true; og.imageSmoothingQuality = 'high';
+    heroTile(og, k, s, 0, 0);
+    if (frac > .01) { og.globalAlpha = frac; heroTile(og, k + 1, s, 0, 0); og.globalAlpha = 1; }
+    og.globalCompositeOperation = 'multiply'; og.fillStyle = '#a4b8c8'; og.fillRect(0, 0, bw, bh); og.globalCompositeOperation = 'source-over';
+    hg.setTransform(1, 0, 0, 1, 0, 0); hg.fillStyle = PAGE; hg.fillRect(0, 0, W, H);
+    hg.globalCompositeOperation = 'lighten'; hg.drawImage(hero.off, ox, oy); hg.globalCompositeOperation = 'source-over';
+  }
+  function heroLoop(ts) {
+    if (!hero.visible || document.hidden) { hero.running = false; return; }
+    if (ts - hero.last > 30) { hero.last = ts; heroFrame(ts); }
+    requestAnimationFrame(heroLoop);
+  }
+  function heroStart() { if (!hero.running && hero.img && !REDUCED) { hero.running = true; requestAnimationFrame(heroLoop); } }
+  new ResizeObserver(() => { heroSize(); heroFrame(performance.now()); }).observe(hcv);
+  new IntersectionObserver(es => { hero.visible = es[0].isIntersecting; if (hero.visible) heroStart(); }).observe(hcv);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) heroStart(); });
+
+  // ------------------------------------------------------------ boot
+  (async () => {
+    let data;
+    try { data = await (await fetch(ASSETS + 'cases.json')).json(); }
+    catch (e) { $('loading').textContent = 'The scans could not load. Serve this page over http(s) next to the walnut-assets folder.'; return; }
+    FIND = ORDER.map(id => ({ id, cases: data.cases.filter(c => c.finding === id) })); HERO = data.hero;
+    await (document.fonts ? document.fonts.ready : Promise.resolve());
+    buildTabs(); size(); heroSize();
+    hero.img = await loadImg(ASSETS + HERO.file); heroFrame(performance.now()); heroStart();
+    await selectCase(0, 0);
+  })();
+})();
+</script>
+</body>
+</html>
