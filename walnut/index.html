@@ -253,9 +253,27 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
 }
 @media (max-width: 520px) {
   nav.site { gap: 22px; }
+  .controls #modeSeg { margin-left: 0; }
   .tag.tr { display: none; }
   .seg button { padding: 2px 12px; }
   .perf-list dd { font-size: 1.6rem; }
+}
+/* Touch screens: swipe sideways across the scan to change slices, a full-width slider under it instead of the
+   thin vertical rail, 44 px controls, and instructions that talk about fingers instead of a cursor. */
+.rail-h, .coarse { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .fine { display: none; }
+  .coarse { display: inline; }
+  .stage { cursor: default; }
+  .rail { display: none; }
+  .tag.tr, .tag.side.l, .tag.br { right: 14px; }
+  .rail-h { display: block; }
+  .rail-h input { display: block; width: 100%; height: 44px; margin: 0; background: transparent; -webkit-appearance: none; appearance: none; }
+  .rail-h input::-webkit-slider-runnable-track { height: 2px; border-radius: 1px; background: var(--line-2); }
+  .rail-h input::-moz-range-track { height: 2px; border-radius: 1px; background: var(--line-2); }
+  .rail-h input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; margin-top: -11px; border-radius: 50%; background: var(--accent-hi); box-shadow: 0 0 0 4px var(--bg); }
+  .rail-h input::-moz-range-thumb { width: 24px; height: 24px; border: 0; border-radius: 50%; background: var(--accent-hi); box-shadow: 0 0 0 4px var(--bg); }
+  .seg button { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 </style>
@@ -298,7 +316,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
       <div class="section-head">
         <p class="label">See it work</p>
         <h2 id="probe-title">See what <em>it sees.</em></h2>
-        <p class="lede">Fifteen real patients, three for each finding. Everything in amber is what Walnut found on its own. Scroll over the scan or drag the rail to move through the slices, and switch to Compare to put the expert's outline beside it.</p>
+        <p class="lede">Fifteen real patients, three for each finding. Everything in amber is what Walnut found on its own. <span class="fine">Scroll over the scan or drag the rail</span><span class="coarse">Swipe sideways across the scan or drag the slider</span> to move through the slices, and switch to Compare to put the expert's outline beside it.</p>
       </div>
       <div class="tabs" role="tablist" aria-label="Finding" id="tabs"></div>
       <div class="probe-grid">
@@ -322,7 +340,8 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
             <div class="tag br" id="tagSlice"></div>
             <div class="rail"><input type="range" id="depth" min="0" max="10" value="5" aria-label="Slice"></div>
           </div>
-          <div class="readout" aria-live="polite"><span class="label">Under the cursor</span><span id="readout" class="legend"></span></div>
+          <div class="rail-h"><input type="range" id="depthH" min="0" max="10" value="5" aria-label="Slice"></div>
+          <div class="readout" aria-live="polite"><span class="label"><span class="fine">Under the cursor</span><span class="coarse">Under your finger</span></span><span id="readout" class="legend"></span></div>
           <div class="legend" id="legend"></div>
         </div>
         <article class="dossier" id="dossier" aria-live="polite"></article>
@@ -520,6 +539,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
   const RGB = { a: [233, 168, 79], b: [239, 106, 85], x: [169, 212, 239] };
   const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const COARSE = matchMedia('(hover: none) and (pointer: coarse)');
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
   const fmt = (v, d = 1) => Number(v).toFixed(d);
   const FONT = "'EB Garamond', Georgia, serif";
@@ -737,7 +757,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
   function updateReadout() {
     const c = cur(), cp = COPY[c.finding], v = underCursor();
     let html;
-    if (!v) html = '<span class="hint">Point at the scan</span>';
+    if (!v) html = `<span class="hint">${COARSE.matches ? 'Touch the scan' : 'Point at the scan'}</span>`;
     else if (!v.a && !v.b) html = '<span class="hint">Nothing flagged here</span>';
     else html = (v.b ? `<span class="key"><span class="sw b"></span>${cp.layers.b}</span>` : '') + (v.a ? `<span class="key"><span class="sw a"></span>${cp.layers.a}</span>` : '');
     if (html !== lastReadout) { $('readout').innerHTML = html; lastReadout = html; }
@@ -765,7 +785,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
   function setSlice(k) {
     const c = cur(); k = clamp(Math.round(k), 0, c.n - 1);
     if (k === st.k && st.ready) return;
-    st.k = k; $('depth').value = String(k); $('tagSlice').textContent = `Slice ${k + 1} / ${c.n}`; kick();
+    st.k = k; $('depth').value = $('depthH').value = String(k); $('tagSlice').textContent = `Slice ${k + 1} / ${c.n}`; kick();
   }
   function setMode(m) {
     if (m === 'compare' && !cur().walnut) m = 'walnut';
@@ -815,7 +835,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
     if (!names.includes(st.contrast)) st.contrast = names[0];
     $('contrastSeg').innerHTML = names.map(n => `<button type="button" id="seq-${n.replace(/\W/g, '')}" data-c="${n}" aria-pressed="false">${n}</button>`).join('');
     $('mode-compare').hidden = !c.walnut;
-    $('depth').max = String(c.n - 1);
+    $('depth').max = $('depthH').max = String(c.n - 1);
     $('tagCase').textContent = `${COPY[c.finding].source} \u00b7 patient ${pi + 1}`;
     st.ready = true; $('loading').hidden = true;
     st.k = -1; setSlice(c.start); setContrast(st.contrast); buildDossier(); setMode(st.mode); kick();
@@ -832,11 +852,21 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
     $('patientSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) selectCase(st.fi, +b.dataset.p); });
   }
   const pointer = e => { const r = stage.getBoundingClientRect(); return { x: (e.clientX - r.left) * dpr, y: (e.clientY - r.top) * dpr }; };
+  // touch: a sideways swipe moves through slices (one per 10 px); a vertical one is left to the page (touch-action: pan-y);
+  // a tap shows what is under the finger
+  let swipe = null;
+  stage.addEventListener('pointerup', () => { swipe = null; });
+  stage.addEventListener('pointercancel', () => { swipe = null; });
   stage.addEventListener('pointermove', e => {
+    if (swipe && e.pointerType !== 'mouse') {
+      const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y;
+      if (!swipe.on && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { swipe.on = true; swipe.x = e.clientX; }
+      if (swipe.on) { st.ptr = null; setSlice(swipe.k + (e.clientX - swipe.x) / 10); kick(); return; }
+    }
     if (e.target.closest('.rail')) { st.ptr = null; kick(); return; }
     st.ptr = pointer(e); st.lastMove = performance.now(); kick();
   });
-  stage.addEventListener('pointerdown', e => { if (!e.target.closest('.rail')) { st.ptr = pointer(e); st.lastMove = performance.now(); kick(); } });
+  stage.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') swipe = { x: e.clientX, y: e.clientY, k: st.k, on: false }; if (!e.target.closest('.rail')) { st.ptr = pointer(e); st.lastMove = performance.now(); kick(); } });
   stage.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { st.ptr = null; kick(); } });
   stage.addEventListener('wheel', e => {
     if (!st.ready || performance.now() - st.lastMove > 1500) return; // let a passing page scroll through
@@ -849,6 +879,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
     e.preventDefault(); setSlice(st.k + map[e.key]);
   });
   $('depth').addEventListener('input', e => setSlice(+e.target.value));
+  $('depthH').addEventListener('input', e => setSlice(+e.target.value));
   $('modeSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setMode(b.dataset.mode); });
   $('contrastSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setContrast(b.dataset.c); });
   new ResizeObserver(() => { size(); kick(); }).observe(stage);
