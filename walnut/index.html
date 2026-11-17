@@ -258,8 +258,11 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
   .probe-grid, .neuro-grid, .closing, .cases { grid-template-columns: minmax(0, 1fr); }
   .perf, .all-grid { grid-template-columns: minmax(0, 1fr); }
   .hero { min-height: 0; padding-top: 104px; padding-bottom: 64px; align-items: flex-start; }
-  .hero::after { background: linear-gradient(180deg, rgba(9,13,17,.15) 0%, rgba(9,13,17,.6) 34%, rgba(9,13,17,.93) 58%, var(--bg) 100%); }
-  .hero-main { padding-top: calc(70vw - 40px); }
+  /* The brain sits on its own above the text: it is drawn 64 px from the top at min(66vw, 420px) wide (heroFrame), so
+     --art is where its tile ends; the text starts just below and the brain's lower edge fades into the page there. */
+  .hero { --art: calc(64px + min(66vw, 420px) * var(--hero-ratio, 1.238)); }
+  .hero::after { background: linear-gradient(180deg, rgba(9,13,17,.08) 0, rgba(9,13,17,.08) calc(var(--art) - 120px), rgba(9,13,17,.9) calc(var(--art) - 12px), var(--bg) var(--art)); }
+  .hero-main { padding-top: calc(var(--art) - 104px + 8px); }
   /* Single column: lists that sit side by side on desktop stack here, and each one's closing hairline would land a
      section's padding away from the next section's border (double lines). Tighter rhythm, no trailing hairline on the
      last item, and use-case cards separated by their images and space instead of rules. */
@@ -282,11 +285,13 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
 }
 @media (max-width: 520px) {
   nav.site { gap: 22px; }
-  .sizes figure { gap: 8px; }
-  .sizes figcaption b { font-size: 1.15rem; }
-  .sizes figcaption > span { font-size: .68rem; letter-spacing: .05em; line-height: 1.35; }
+  .sizes { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .sizes figure { grid-template-columns: 52% minmax(0, 1fr); align-items: center; gap: 20px; }
+  .sizes figcaption { gap: 4px; }
+  .sizes figcaption b { font-size: 1.7rem; }
   .sizes .dot { display: none; }
   .sizes .seq { display: block; color: var(--faint); }
+  .sizes-scale i { width: calc(52% / 3); }
   .controls #modeSeg { margin-left: 0; }
   .tag.tr { display: none; }
   .seg button { padding: 2px 12px; }
@@ -927,12 +932,12 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
   // ------------------------------------------------------------ hero: the standard brain, read slice by slice
   const hcv = $('heroScan'), hg = hcv.getContext('2d');
   const hero = { img: null, visible: true, last: 0, running: false, dpr: 1, off: null };
-  function heroSize() { const r = hcv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1); hcv.width = Math.round(r.width * d); hcv.height = Math.round(r.height * d); hero.dpr = d; }
+  function heroSize() { if (HERO) hcv.parentElement.style.setProperty('--hero-ratio', HERO.th / HERO.tw); const r = hcv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1); hcv.width = Math.round(r.width * d); hcv.height = Math.round(r.height * d); hero.dpr = d; }
   function heroTile(g, k, s, ox, oy) { const h = HERO; g.drawImage(hero.img, (k % h.cols) * h.tw, Math.floor(k / h.cols) * h.th, h.tw, h.th, ox, oy, h.tw * s, h.th * s); }
   function heroFrame(ts) {
     if (!hero.img) return;
     const h = HERO, W = hcv.width, H = hcv.height, d = hero.dpr, narrow = W / d < 900;
-    const s = narrow ? Math.min(W * .66 / h.tw, H * .45 / h.th) : Math.min(H * .86 / h.th, W * .48 / h.tw);
+    const s = narrow ? Math.min(W * .66, 420 * d) / h.tw : Math.min(H * .86 / h.th, W * .48 / h.tw); // narrow: keep in step with .hero --art
     const bw = Math.ceil(h.tw * s), bh = Math.ceil(h.th * s);
     const ox = narrow ? (W - bw) / 2 : W * .67 - bw / 2, oy = narrow ? 64 * d : (H - bh) / 2 + 10 * d;
     const t = REDUCED ? 0 : ts / 1000, period = 16;
