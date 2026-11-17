@@ -121,10 +121,17 @@ section.band { padding: 104px var(--gutter); border-top: 1px solid var(--line); 
 .viewer { display: grid; gap: 14px; min-width: 0; }
 .controls { display: flex; flex-wrap: wrap; gap: 10px 12px; }
 .controls #modeSeg { margin-left: auto; }
-.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 999px; padding: 3px; gap: 2px; }
-.seg button { min-height: 36px; padding: 2px 15px; border-radius: 999px; color: var(--text-3); font-size: .98rem; transition: background .2s, color .2s; }
+.seg { position: relative; isolation: isolate; display: inline-flex; border: 1px solid var(--line-2); border-radius: 999px; padding: 3px; gap: 2px; }
+.seg button { position: relative; z-index: 1; min-height: 36px; padding: 2px 15px; border-radius: 999px; color: var(--text-3); font-size: .98rem;
+  -webkit-tap-highlight-color: transparent; transition: background .2s, color .25s, transform .18s cubic-bezier(.3, .7, .4, 1); }
 .seg button:hover { color: var(--text); }
+.seg button:active { transform: scale(.93); }
 .seg button[aria-pressed="true"] { background: rgba(159,182,200,.16); color: var(--text); }
+/* With JS, the selected background is one pill that slides between options (springy ease, like a native segmented control). */
+.seg.pilled button[aria-pressed="true"] { background: transparent; }
+.seg .pill { position: absolute; z-index: 0; top: 3px; bottom: 3px; left: 0; width: 0; border-radius: 999px; pointer-events: none;
+  background: rgba(159,182,200,.16); box-shadow: inset 0 0 0 1px rgba(159,182,200,.12);
+  transition: transform .45s cubic-bezier(.32, .72, 0, 1), width .45s cubic-bezier(.32, .72, 0, 1), opacity .2s; }
 .stage {
   position: relative; width: 100%; max-width: 100%; aspect-ratio: 5 / 6; max-height: min(78vh, 740px);
   background: #000; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; touch-action: pan-y; cursor: crosshair;
@@ -155,6 +162,7 @@ section.band { padding: 104px var(--gutter); border-top: 1px solid var(--line); 
 .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .95rem; color: var(--muted); }
 .hint { font-size: .95rem; color: var(--faint); font-style: italic; }
 .dossier { display: grid; gap: 22px; min-width: 0; padding-top: 4px; }
+.viewer-cap { display: none; }
 .dossier h3 { font-weight: 400; font-size: clamp(2.2rem, 3.6vw, 2.9rem); letter-spacing: -.02em; line-height: 1.02; }
 .dossier .tagline { font-style: italic; color: var(--ice); font-size: 1.25rem; line-height: 1.35; margin-top: -10px; }
 .dossier p.body { font-weight: 400; color: var(--text-2); font-size: 1.08rem; line-height: 1.62; max-width: 60ch; }
@@ -172,7 +180,7 @@ section.band { padding: 104px var(--gutter); border-top: 1px solid var(--line); 
 .sizes img { width: 100%; height: auto; aspect-ratio: 1; display: block; border-radius: 3px; background: #000; }
 .sizes figcaption { display: grid; gap: 0; }
 .sizes figcaption b { font-size: 1.6rem; font-weight: 400; line-height: 1.1; font-variant-numeric: tabular-nums; }
-.sizes figcaption span { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sizes figcaption > span { font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .sizes-scale { display: flex; align-items: center; gap: 12px; margin: 14px 0 44px; font-size: .92rem; color: var(--faint); line-height: 1.4; }
 .sizes-scale i { flex: none; width: calc((100% - 3 * clamp(10px, 1.6vw, 22px)) / 4 / 3); max-width: 33%; height: 6px; border: 1px solid var(--muted); border-top: 0; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 clamp(20px, 4vw, 56px); border-top: 1px solid var(--line); }
@@ -237,22 +245,48 @@ section.band { padding: 104px var(--gutter); border-top: 1px solid var(--line); 
 .closing p { font-weight: 400; font-size: 1.15rem; color: var(--text-2); line-height: 1.62; max-width: 56ch; }
 .motto { color: var(--muted); font-size: 1rem; line-height: 1.4; }
 footer.site { padding: 40px var(--gutter) calc(48px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); }
-footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px 32px; align-items: baseline; }
+footer.site .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px 32px; align-items: flex-end; }
+/* the site's own signature mark (same SVG and size as the inner pages' footer logo), signing off above the motto */
+footer.site .sign { display: grid; justify-items: end; gap: 8px; }
+.footer-logo { display: inline-flex; color: var(--ice); transition: color .2s; }
+.footer-logo:hover { color: var(--text); }
+.footer-logo svg { display: block; width: 57px; height: 40px; }
+@media (max-width: 700px) { footer.site .sign { justify-items: start; } }
 footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-width: 70ch; }
 
 @media (max-width: 900px) {
   .probe-grid, .neuro-grid, .closing, .cases { grid-template-columns: minmax(0, 1fr); }
-  .sizes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .perf, .all-grid { grid-template-columns: minmax(0, 1fr); }
   .hero { min-height: 0; padding-top: 104px; padding-bottom: 64px; align-items: flex-start; }
   .hero::after { background: linear-gradient(180deg, rgba(9,13,17,.15) 0%, rgba(9,13,17,.6) 34%, rgba(9,13,17,.93) 58%, var(--bg) 100%); }
   .hero-main { padding-top: calc(70vw - 40px); }
-  section.band { padding-block: 72px; }
+  /* Single column: lists that sit side by side on desktop stack here, and each one's closing hairline would land a
+     section's padding away from the next section's border (double lines). Tighter rhythm, no trailing hairline on the
+     last item, and use-case cards separated by their images and space instead of rules. */
+  section.band { padding-block: 56px; }
+  .section-head { margin-bottom: 32px; }
+  .tiles > .tile:last-child, .specs > div:last-child, .perf-list > div:last-child { border-bottom: 0; padding-bottom: 0; }
+  .cases { border-top: 0; gap: 40px; }
+  .case { border-bottom: 0; padding: 0; }
+  .neuro-grid { gap: 40px; }
+  .sizes-scale { margin-bottom: 28px; }
+  .all-results { margin-top: 32px; }
   .tabs { gap: 2px 20px; }
   .tab { font-size: 1.05rem; }
+  /* One column: the finding's tagline captions the viewer from above and the write-up runs straight on below the
+     legend with no second heading, so viewer and write-up read as one piece instead of two sections. */
+  .probe-grid { gap: 26px; }
+  .viewer-cap { display: block; font-style: italic; color: var(--ice); font-size: 1.2rem; line-height: 1.35; margin: -6px 0 4px; }
+  .dossier { padding-top: 0; gap: 18px; }
+  .dossier h3, .dossier .tagline { display: none; }
 }
 @media (max-width: 520px) {
   nav.site { gap: 22px; }
+  .sizes figure { gap: 8px; }
+  .sizes figcaption b { font-size: 1.15rem; }
+  .sizes figcaption > span { font-size: .68rem; letter-spacing: .05em; line-height: 1.35; }
+  .sizes .dot { display: none; }
+  .sizes .seq { display: block; color: var(--faint); }
   .controls #modeSeg { margin-left: 0; }
   .tag.tr { display: none; }
   .seg button { padding: 2px 12px; }
@@ -321,6 +355,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
       <div class="tabs" role="tablist" aria-label="Finding" id="tabs"></div>
       <div class="probe-grid">
         <div class="viewer">
+          <p class="viewer-cap" id="viewerCap" aria-hidden="true"></p>
           <div class="controls">
             <div class="seg" role="group" aria-label="Patient" id="patientSeg"></div>
             <div class="seg" role="group" aria-label="Sequence" id="contrastSeg"></div>
@@ -358,10 +393,10 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
         <p class="lede">A big tumor is easy to see. The findings that change care are often a few millimeters wide: a bleed the size of a grain of rice, a new plaque, a metastasis that hasn't grown yet. Walnut is built to catch them.</p>
       </div>
       <div class="sizes">
-        <figure><img src="walnut-assets/size_0.jpg" width="360" height="360" alt="A 3.5 mm microbleed on T2*, outlined by Walnut"><figcaption><b>3.5 mm</b><span>Microbleed &middot; T2*</span></figcaption></figure>
-        <figure><img src="walnut-assets/size_1.jpg" width="360" height="360" alt="A 5.4 mm MS plaque on FLAIR, outlined by Walnut"><figcaption><b>5.4 mm</b><span>MS plaque &middot; FLAIR</span></figcaption></figure>
-        <figure><img src="walnut-assets/size_2.jpg" width="360" height="360" alt="A 10 mm brain metastasis on contrast T1, outlined by Walnut"><figcaption><b>10 mm</b><span>Metastasis &middot; T1c</span></figcaption></figure>
-        <figure><img src="walnut-assets/size_3.jpg" width="360" height="360" alt="A 22 mm glioma enhancing rim on contrast T1, outlined by Walnut"><figcaption><b>22 mm</b><span>Glioma &middot; T1c</span></figcaption></figure>
+        <figure><img src="walnut-assets/size_0.jpg" width="360" height="360" alt="A 3.5 mm microbleed on T2*, outlined by Walnut"><figcaption><b>3.5 mm</b><span>Microbleed<span class="dot"> &middot; </span><span class="seq">T2*</span></span></figcaption></figure>
+        <figure><img src="walnut-assets/size_1.jpg" width="360" height="360" alt="A 5.4 mm MS plaque on FLAIR, outlined by Walnut"><figcaption><b>5.4 mm</b><span>MS plaque<span class="dot"> &middot; </span><span class="seq">FLAIR</span></span></figcaption></figure>
+        <figure><img src="walnut-assets/size_2.jpg" width="360" height="360" alt="A 10 mm brain metastasis on contrast T1, outlined by Walnut"><figcaption><b>10 mm</b><span>Metastasis<span class="dot"> &middot; </span><span class="seq">T1c</span></span></figcaption></figure>
+        <figure><img src="walnut-assets/size_3.jpg" width="360" height="360" alt="A 22 mm glioma enhancing rim on contrast T1, outlined by Walnut"><figcaption><b>22 mm</b><span>Glioma<span class="dot"> &middot; </span><span class="seq">T1c</span></span></figcaption></figure>
       </div>
       <div class="sizes-scale"><i aria-hidden="true"></i><span>10 mm. Real patients, all at the same scale; each square is 30 mm across. The amber outline is Walnut's.</span></div>
       <div class="tiles">
@@ -526,8 +561,11 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
 
 <footer class="site">
   <div class="wrap">
-    <p>Walnut is a research model. It is not a medical device and is not for clinical use.<br>Scans: HCP-Aging, BraTS 2021, UCSF-BMSR, Ljubljana MS, ADNI and SOOP.</p>
-    <p class="motto"><em>Per aspera ad astra.</em></p>
+    <p>For clinical research use only. Walnut is in beta and has not been cleared or approved by the Food and Drug Administration. It is not intended for diagnosis or treatment decisions.</p>
+    <div class="sign">
+      <a class="footer-logo" href="https://mihirneal.com/" aria-label="Mihir Tripathy, home"><svg aria-hidden="true" focusable="false" viewBox="30 -831.5 1242.7 871.5" fill="currentColor"><path d="M84 16Q77 16 69.5 10.5Q62 5 57.0 -4.0Q52 -13 52 -23Q52 -28 57.0 -43.0Q62 -58 70 -80L167 -325Q171 -337 167.0 -345.0Q163 -353 152 -353Q138 -353 120.0 -346.5Q102 -340 77 -310Q73 -306 67.5 -306.5Q62 -307 61 -314Q61 -321 64.5 -331.5Q68 -342 74.0 -352.5Q80 -363 86 -369Q105 -390 130.5 -405.0Q156 -420 195 -421Q212 -421 226.0 -413.5Q240 -406 245.5 -390.5Q251 -375 242 -354L185 -211Q182 -204 186.5 -203.0Q191 -202 195 -208Q236 -273 274.0 -320.5Q312 -368 348.5 -394.5Q385 -421 421 -421Q447 -421 463.0 -405.5Q479 -390 482.5 -364.0Q486 -338 472 -305L444 -226Q441 -219 446.0 -218.0Q451 -217 455 -222Q493 -284 530.5 -328.5Q568 -373 605.5 -397.0Q643 -421 678 -421Q704 -421 719.0 -405.0Q734 -389 736.0 -362.0Q738 -335 723 -299L643 -98Q629 -64 648 -64Q658 -64 672.5 -73.0Q687 -82 703.0 -95.0Q719 -108 731.0 -119.5Q743 -131 747 -135Q750 -138 752.0 -139.5Q754 -141 756 -141Q759 -141 762.0 -138.0Q765 -135 765 -131Q765 -122 761.0 -113.0Q757 -104 747 -94Q710 -52 664.0 -19.0Q618 14 567 14Q559 14 548.5 7.5Q538 1 532.0 -10.0Q526 -21 531 -32L654 -332Q662 -351 654.5 -360.5Q647 -370 637 -371Q622 -372 598.0 -354.0Q574 -336 545 -297Q528 -275 502.0 -236.0Q476 -197 448.5 -152.5Q421 -108 398 -68Q383 -40 367.0 -21.5Q351 -3 338.0 6.5Q325 16 316 16Q310 16 303.0 10.5Q296 5 291.5 -2.5Q287 -10 287 -17Q287 -23 292.5 -40.0Q298 -57 306 -81L404 -335Q413 -356 404.5 -364.5Q396 -373 388 -374Q373 -375 348.0 -356.0Q323 -337 291 -296Q278 -279 260.5 -252.5Q243 -226 224.0 -194.5Q205 -163 186.0 -130.5Q167 -98 151 -69Q128 -27 113.0 -5.5Q98 16 84 16ZM764 14Q754 14 742.5 6.0Q731 -2 723.5 -12.5Q716 -23 716 -31Q716 -45 719.5 -55.5Q723 -66 729 -82L824 -344Q827 -354 823.0 -357.5Q819 -361 813 -361L797 -363Q782 -364 779.0 -369.5Q776 -375 776 -379Q776 -381 781.5 -387.5Q787 -394 796.0 -400.5Q805 -407 815 -407H830Q842 -407 846.5 -411.0Q851 -415 857 -427L882 -479Q888 -489 899.5 -501.0Q911 -513 924.0 -521.5Q937 -530 944 -530Q955 -530 958.0 -517.5Q961 -505 957 -493L932 -423Q929 -413 932.5 -410.5Q936 -408 945 -408Q963 -408 982.0 -405.0Q1001 -402 1016 -400Q1034 -397 1038.0 -393.0Q1042 -389 1042 -383Q1042 -381 1037.5 -375.5Q1033 -370 1020 -369Q1001 -368 983.5 -366.5Q966 -365 945 -364Q928 -363 920.5 -359.0Q913 -355 910 -347L826 -115Q821 -100 821.0 -90.5Q821 -81 826.0 -77.0Q831 -73 840 -73C850.8 -73.0 861.6 -73.2 872.3 -74.4C883.0 -75.5 893.7 -77.3 904.2 -79.7C914.8 -82.1 925.3 -85.3 935.6 -88.8C945.9 -92.3 956.1 -96.1 965.8 -100.8C975.5 -105.5 985.0 -110.9 993.8 -117.0C1002.6 -123.2 1010.9 -130.3 1018.5 -137.8C1026.2 -145.4 1033.2 -153.7 1039.7 -162.3C1046.1 -170.9 1051.9 -180.1 1057.4 -189.4C1062.9 -198.7 1067.7 -208.4 1072.4 -218.1C1077.0 -227.8 1081.1 -237.8 1085.1 -247.9C1089.1 -257.9 1092.7 -268.1 1096.1 -278.3C1099.6 -288.5 1102.8 -298.8 1105.8 -309.2C1108.9 -319.5 1111.7 -330.0 1114.4 -340.4C1117.1 -350.9 1119.7 -361.4 1122.1 -371.9C1124.6 -382.4 1126.9 -392.9 1129.1 -403.5C1131.4 -414.0 1133.5 -424.6 1135.5 -435.2C1137.6 -445.8 1139.5 -456.4 1141.4 -467.1C1143.3 -477.7 1145.1 -488.3 1146.8 -499.0C1148.6 -509.6 1150.3 -520.3 1151.9 -531.0C1153.5 -541.6 1155.1 -552.3 1156.6 -563.0L1163.1 -562.1C1161.5 -551.4 1160.0 -540.7 1158.5 -530.0C1157.0 -519.2 1155.4 -508.5 1153.9 -497.8C1152.3 -487.1 1150.7 -476.4 1149.1 -465.7C1147.4 -455.0 1145.8 -444.3 1144.0 -433.6C1142.3 -422.9 1140.5 -412.2 1138.7 -401.5C1136.8 -390.8 1134.9 -380.1 1132.9 -369.4C1130.8 -358.7 1128.7 -348.0 1126.5 -337.3C1124.2 -326.6 1121.9 -315.9 1119.3 -305.2C1116.8 -294.6 1114.1 -283.9 1111.2 -273.2C1108.3 -262.6 1105.2 -251.9 1101.7 -241.3C1098.3 -230.7 1094.6 -220.1 1090.4 -209.6C1086.3 -199.1 1081.8 -188.6 1076.6 -178.2C1071.5 -167.9 1066.0 -157.6 1059.4 -147.6C1052.9 -137.6 1046.6 -128.2 1037.6 -118.4C1028.6 -108.5 1018.5 -98.7 1005.3 -88.3C992.1 -77.9 975.4 -66.5 958.3 -55.9C941.1 -45.4 920.8 -34.2 902.3 -25.1C883.8 -15.9 864.1 -7.4 847.2 -1.3C830.3 4.8 814.6 8.8 800.7 11.4C786.9 13.9 776.3 14.0 764.0 14.0ZM1162.7 -806.5L1169.2 -710.2L1195.2 -727.1L1178.4 -701.0L1242.7 -694.5L1178.4 -688.0L1195.2 -662.0L1169.2 -678.8L1162.7 -582.5L1156.2 -678.8L1130.2 -662.0L1147.0 -688.0L1082.7 -694.5L1147.0 -701.0L1130.2 -727.1L1156.2 -710.2Z"/></svg></a>
+      <p class="motto"><em>Per aspera ad astra.</em></p>
+    </div>
   </div>
 </footer>
 
@@ -820,6 +858,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
       rows.push(`<tr><td>${cp.layers.a}</td><td>${ml(S.ea.ml)} mL</td><td>${c.count != null ? c.count : S.ea.n}</td></tr>`);
       table = `<table class="measure"><caption class="label">Patient ${st.pi + 1}, expert annotation</caption><tbody>${rows.join('')}</tbody></table>`;
     }
+    $('viewerCap').textContent = cp.tagline;
     $('dossier').innerHTML = `<h3>${cp.name}</h3><p class="tagline">${cp.tagline}</p>${cp.body.map(p => `<p class="body">${p}</p>`).join('')}
       ${table}<p class="source">${c.walnut ? cp.sourceLong : cp.source + '. The colored regions are the expert annotation.'}</p>`;
   }
@@ -920,6 +959,31 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
   new IntersectionObserver(es => { hero.visible = es[0].isIntersecting; if (hero.visible) heroStart(); }).observe(hcv);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) heroStart(); });
 
+  // ------------------------------------------------------------ toggles
+  // The selected option's background is a pill that slides to the new choice. The patient and sequence buttons are
+  // re-rendered on every case change, so the pill remembers where it was and starts its slide from there.
+  function placePill(seg, instant) {
+    const b = seg.querySelector('button[aria-pressed="true"]:not([hidden])');
+    let pill = seg.querySelector(':scope > .pill');
+    if (!b) { if (pill) pill.style.opacity = '0'; return; }
+    const to = { x: b.offsetLeft, w: b.offsetWidth };
+    if (!pill) {
+      const from = seg._pill || to;
+      pill = document.createElement('span'); pill.className = 'pill'; pill.setAttribute('aria-hidden', 'true');
+      pill.style.transition = 'none'; pill.style.width = from.w + 'px'; pill.style.transform = `translateX(${from.x}px)`;
+      seg.prepend(pill); seg.classList.add('pilled'); void pill.offsetWidth; pill.style.transition = '';
+    }
+    if (instant) pill.style.transition = 'none';
+    pill.style.opacity = '1'; pill.style.width = to.w + 'px'; pill.style.transform = `translateX(${to.x}px)`; seg._pill = to;
+    if (instant) { void pill.offsetWidth; pill.style.transition = ''; }
+  }
+  const SEGS = [...document.querySelectorAll('.seg')];
+  const segObs = new MutationObserver(ms => new Set(ms.map(m => m.target.closest && m.target.closest('.seg'))).forEach(sg => sg && placePill(sg)));
+  SEGS.forEach(sg => { segObs.observe(sg, { subtree: true, childList: true, attributes: true, attributeFilter: ['aria-pressed', 'hidden'] }); placePill(sg, true); });
+  const replacePills = () => SEGS.forEach(sg => placePill(sg, true));
+  addEventListener('resize', replacePills);
+  document.addEventListener('touchstart', () => {}, { passive: true }); // iOS Safari shows :active press states only with a touch listener
+
   // ------------------------------------------------------------ boot
   (async () => {
     let data;
@@ -927,7 +991,7 @@ footer.site p { font-size: .95rem; color: var(--faint); line-height: 1.5; max-wi
     catch (e) { $('loading').textContent = 'The scans could not load. Serve this page over http(s) next to the walnut-assets folder.'; return; }
     FIND = ORDER.map(id => ({ id, cases: data.cases.filter(c => c.finding === id) })); HERO = data.hero;
     await (document.fonts ? document.fonts.ready : Promise.resolve());
-    buildTabs(); size(); heroSize();
+    replacePills(); buildTabs(); size(); heroSize();
     hero.img = await loadImg(ASSETS + HERO.file); heroFrame(performance.now()); heroStart();
     await selectCase(0, 0);
   })();
